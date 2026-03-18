@@ -148,12 +148,18 @@ function renderGrupos() {
         <span class="badge badge-${g.estado}">${g.estado==="ok"?"Sin alertas":g.estado==="warn"?"Atención":"Alerta"}</span>
       </div>
       <div class="grupo-info">${g.nivel} · ${g.horario}</div>
-      ${g.miembros.map(m=>`
-        <div class="miembro">
-          <div class="avatar">${initials(m.nombre)}</div>
-          <div><div class="miembro-nombre">${m.nombre}</div><div class="miembro-zona">${m.zona}</div></div>
-          ${m.ausencias>=3?`<div class="ausente">⚠ ${m.ausencias} ausencias</div>`:""}
-        </div>`).join("")}
+      <div class="miembros-lista">
+        ${g.miembros.map(m=>`
+          <div class="miembro">
+            <div class="avatar">${initials(m.nombre)}</div>
+            <div class="miembro-info">
+              <div class="miembro-nombre">${m.nombre}</div>
+              <div class="miembro-zona">${m.zona}</div>
+            </div>
+            ${m.ausencias>=3?`<div class="ausente">⚠ ${m.ausencias} ausencias</div>`:""}
+          </div>
+        `).join("")}
+      </div>
     </div>`).join("");
 }
 function renderAlertas() {
