@@ -1,203 +1,186 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.4">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times; color: #181b22; -webkit-text-stroke: #181b22; background-color: #ffffff}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times; color: #181b22; -webkit-text-stroke: #181b22; background-color: #ffffff; min-height: 18.0px}
-    span.s1 {font-kerning: none}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Clases de Idiomas</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f0; color: #1a1a1a; min-height: 100vh; }
+
+  header { background: #fff; border-bottom: 1px solid #e8e8e4; padding: 18px 32px; display: flex; align-items: center; gap: 12px; }
+  .logo { width: 36px; height: 36px; background: #534AB7; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; }
+  header h1 { font-size: 17px; font-weight: 500; }
+  header span { font-size: 13px; color: #888; }
+
+  main { max-width: 520px; margin: 48px auto; padding: 0 20px; }
+  .hero { margin-bottom: 32px; }
+  .hero h2 { font-size: 26px; font-weight: 600; margin-bottom: 10px; line-height: 1.3; }
+  .hero p { font-size: 15px; color: #555; line-height: 1.6; }
+
+  .card { background: #fff; border: 1px solid #e8e8e4; border-radius: 16px; padding: 32px; }
+
+  .field { margin-bottom: 22px; }
+  .field label { display: block; font-size: 13px; font-weight: 500; color: #444; margin-bottom: 8px; }
+  .field input { width: 100%; padding: 11px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; outline: none; background: #fafafa; transition: border-color 0.15s; }
+  .field input:focus { border-color: #534AB7; background: #fff; }
+
+  .options { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opt { padding: 9px 16px; border: 1.5px solid #e0e0e0; border-radius: 8px; background: #fafafa; font-size: 13px; color: #444; cursor: pointer; transition: all 0.12s; user-select: none; }
+  .opt:hover { border-color: #7F77DD; color: #534AB7; }
+  .opt.sel { border-color: #534AB7; background: #EEEDFE; color: #3C3489; font-weight: 500; }
+
+  .btn { width: 100%; padding: 14px; background: #534AB7; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 8px; transition: background 0.15s; }
+  .btn:hover:not(:disabled) { background: #3C3489; }
+  .btn:disabled { background: #a8a4d8; cursor: not-allowed; }
+
+  .error { display: none; padding: 12px 16px; background: #FCEBEB; border-radius: 8px; color: #A32D2D; font-size: 13px; margin-top: 12px; }
+
+  #loading { display: none; text-align: center; padding: 40px 0; }
+  .spinner { width: 36px; height: 36px; border: 3px solid #EEEDFE; border-top-color: #534AB7; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #loading p { font-size: 14px; color: #666; }
+
+  #resultado { display: none; text-align: center; padding: 16px 0; }
+  .check { width: 52px; height: 52px; background: #E1F5EE; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 24px; }
+  #resultado h3 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+  #resultado p { font-size: 14px; color: #666; }
+  .grupo-card { margin-top: 20px; background: #EEEDFE; border-radius: 12px; padding: 20px; text-align: left; }
+  .grupo-card .lbl { font-size: 11px; font-weight: 600; color: #534AB7; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; margin-top: 12px; }
+  .grupo-card .lbl:first-child { margin-top: 0; }
+  .grupo-card .val { font-size: 14px; color: #3C3489; }
+
+  footer { text-align: center; padding: 32px; font-size: 12px; color: #aaa; }
+</style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="es"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta charset="UTF-8"/&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"/&gt;</span></p>
-<p class="p1"><span class="s1">&lt;title&gt;Clases de Idiomas&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1">&lt;style&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f0; color: #1a1a1a; min-height: 100vh; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>header { background: #fff; border-bottom: 1px solid #e8e8e4; padding: 18px 32px; display: flex; align-items: center; gap: 12px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.logo { width: 36px; height: 36px; background: #534AB7; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>header h1 { font-size: 17px; font-weight: 500; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>header span { font-size: 13px; color: #888; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>main { max-width: 520px; margin: 48px auto; padding: 0 20px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.hero { margin-bottom: 32px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.hero h2 { font-size: 26px; font-weight: 600; margin-bottom: 10px; line-height: 1.3; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.hero p { font-size: 15px; color: #555; line-height: 1.6; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.card { background: #fff; border: 1px solid #e8e8e4; border-radius: 16px; padding: 32px; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.field { margin-bottom: 22px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.field label { display: block; font-size: 13px; font-weight: 500; color: #444; margin-bottom: 8px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.field input { width: 100%; padding: 11px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; outline: none; background: #fafafa; transition: border-color 0.15s; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.field input:focus { border-color: #534AB7; background: #fff; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.options { display: flex; flex-wrap: wrap; gap: 8px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.opt { padding: 9px 16px; border: 1.5px solid #e0e0e0; border-radius: 8px; background: #fafafa; font-size: 13px; color: #444; cursor: pointer; transition: all 0.12s; user-select: none; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.opt:hover { border-color: #7F77DD; color: #534AB7; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.opt.sel { border-color: #534AB7; background: #EEEDFE; color: #3C3489; font-weight: 500; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.btn { width: 100%; padding: 14px; background: #534AB7; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 8px; transition: background 0.15s; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.btn:hover:not(:disabled) { background: #3C3489; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.btn:disabled { background: #a8a4d8; cursor: not-allowed; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.error { display: none; padding: 12px 16px; background: #FCEBEB; border-radius: 8px; color: #A32D2D; font-size: 13px; margin-top: 12px; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>#loading { display: none; text-align: center; padding: 40px 0; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.spinner { width: 36px; height: 36px; border: 3px solid #EEEDFE; border-top-color: #534AB7; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>@keyframes spin { to { transform: rotate(360deg); } }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>#loading p { font-size: 14px; color: #666; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>#resultado { display: none; text-align: center; padding: 16px 0; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.check { width: 52px; height: 52px; background: #E1F5EE; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 24px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>#resultado h3 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>#resultado p { font-size: 14px; color: #666; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.grupo-card { margin-top: 20px; background: #EEEDFE; border-radius: 12px; padding: 20px; text-align: left; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.grupo-card .lbl { font-size: 11px; font-weight: 600; color: #534AB7; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; margin-top: 12px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.grupo-card .lbl:first-child { margin-top: 0; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.grupo-card .val { font-size: 14px; color: #3C3489; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>footer { text-align: center; padding: 32px; font-size: 12px; color: #aaa; }</span></p>
-<p class="p1"><span class="s1">&lt;/style&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;header&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div class="logo"&gt;H&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;h1&gt;Humanitas &lt;span&gt;· Clases de idiomas&lt;/span&gt;&lt;/h1&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/header&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;main&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div class="hero"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;h2&gt;Inscribite a tu clase de idioma&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;p&gt;Completá el formulario y la IA te va a asignar automáticamente al grupo más compatible con tu nivel y zona horaria.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div class="card"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="form-view"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;label&gt;Nombre completo *&lt;/label&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;input type="text" id="nombre" placeholder="Ej: Ana García"/&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;label&gt;Email *&lt;/label&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;input type="email" id="email" placeholder="tu@empresa.com"/&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;label&gt;¿Qué idioma querés estudiar? *&lt;/label&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="options"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div class="opt" data-g="idioma" data-v="Inglés"&gt;Inglés&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div class="opt" data-g="idioma" data-v="Portugués"&gt;Portugués&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div class="opt" data-g="idioma" data-v="Francés"&gt;Francés&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;label&gt;¿Cuál es tu nivel actual? *&lt;/label&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="options"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div class="opt" data-g="nivel" data-v="A1"&gt;A1&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div class="opt" data-g="nivel" data-v="A2"&gt;A2&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div class="opt" data-g="nivel" data-v="B1"&gt;B1&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div class="opt" data-g="nivel" data-v="B2"&gt;B2&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div class="opt" data-g="nivel" data-v="C1"&gt;C1&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;label&gt;¿En qué zona horaria estás? *&lt;/label&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="options"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div class="opt" data-g="zona" data-v="Argentina"&gt;Argentina&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div class="opt" data-g="zona" data-v="México"&gt;México&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div class="opt" data-g="zona" data-v="España"&gt;España&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div class="opt" data-g="zona" data-v="Colombia"&gt;Colombia&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="error" id="error"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;button class="btn" onclick="enviar()"&gt;Inscribirme al programa&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="loading"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="spinner"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;La IA está buscando tu grupo ideal...&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="resultado"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="check"&gt;✓&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;h3&gt;¡Ya estás inscripto!&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;Te asignamos al grupo más compatible con tu perfil.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="grupo-card" id="grupo-card"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p style="margin-top:16px; font-size:13px; color:#888;"&gt;People se va a contactar con los detalles de tu primera clase.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/main&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;footer&gt;Humanitas · Sistema inteligente de clases de idiomas&lt;/footer&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const sel = { idioma: null, nivel: null, zona: null };</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>document.querySelectorAll(".opt").forEach(btn =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>btn.addEventListener("click", () =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>document.querySelectorAll(`[data-g="${btn.dataset.g}"]`).forEach(b =&gt; b.classList.remove("sel"));</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>btn.classList.add("sel");</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>sel[btn.dataset.g] = btn.dataset.v;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>});</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>});</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>async function enviar() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const nombre = document.getElementById("nombre").value.trim();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const email<span class="Apple-converted-space">  </span>= document.getElementById("email").value.trim();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const err<span class="Apple-converted-space">    </span>= document.getElementById("error");</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>if (!nombre || !email || !sel.idioma || !sel.nivel || !sel.zona) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>err.textContent = "Completá todos los campos antes de continuar.";</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>err.style.display = "block"; return;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>if (!email.includes("@")) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>err.textContent = "El email no parece válido.";</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>err.style.display = "block"; return;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>err.style.display = "none";</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>document.getElementById("form-view").style.display = "none";</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>document.getElementById("loading").style.display = "block";</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>try {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const res = await fetch("/api/group", {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>method: "POST",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>headers: { "Content-Type": "application/json" },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>body: JSON.stringify({ nombre, email, idioma: sel.idioma, nivel: sel.nivel, zona: sel.zona })</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>});</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const grupo = await res.json();</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById("loading").style.display = "none";</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById("resultado").style.display = "block";</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById("grupo-card").innerHTML = `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="lbl"&gt;Grupo asignado&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="val"&gt;Grupo ${grupo.grupo_numero} · ${grupo.idioma} ${grupo.nivel}&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="lbl"&gt;Horario sugerido&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="val"&gt;${grupo.horario_sugerido}&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="lbl"&gt;Compañeros&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="val"&gt;${grupo.companeros.join(", ")}&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="lbl"&gt;Mensaje&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="val"&gt;${grupo.mensaje}&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>} catch (e) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById("loading").style.display = "none";</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById("form-view").style.display = "block";</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>err.textContent = "Error al conectar con el servidor. Intentá de nuevo.";</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>err.style.display = "block";</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p1"><span class="s1">&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+
+<header>
+  <div class="logo">H</div>
+  <h1>Humanitas <span>· Clases de idiomas</span></h1>
+</header>
+
+<main>
+  <div class="hero">
+    <h2>Inscribite a tu clase de idioma</h2>
+    <p>Completá el formulario y la IA te va a asignar automáticamente al grupo más compatible con tu nivel y zona horaria.</p>
+  </div>
+
+  <div class="card">
+    <div id="form-view">
+      <div class="field">
+        <label>Nombre completo *</label>
+        <input type="text" id="nombre" placeholder="Ej: Ana García"/>
+      </div>
+      <div class="field">
+        <label>Email *</label>
+        <input type="email" id="email" placeholder="tu@empresa.com"/>
+      </div>
+      <div class="field">
+        <label>¿Qué idioma querés estudiar? *</label>
+        <div class="options">
+          <div class="opt" data-g="idioma" data-v="Inglés">Inglés</div>
+          <div class="opt" data-g="idioma" data-v="Portugués">Portugués</div>
+          <div class="opt" data-g="idioma" data-v="Francés">Francés</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>¿Cuál es tu nivel actual? *</label>
+        <div class="options">
+          <div class="opt" data-g="nivel" data-v="A1">A1</div>
+          <div class="opt" data-g="nivel" data-v="A2">A2</div>
+          <div class="opt" data-g="nivel" data-v="B1">B1</div>
+          <div class="opt" data-g="nivel" data-v="B2">B2</div>
+          <div class="opt" data-g="nivel" data-v="C1">C1</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>¿En qué zona horaria estás? *</label>
+        <div class="options">
+          <div class="opt" data-g="zona" data-v="Argentina">Argentina</div>
+          <div class="opt" data-g="zona" data-v="México">México</div>
+          <div class="opt" data-g="zona" data-v="España">España</div>
+          <div class="opt" data-g="zona" data-v="Colombia">Colombia</div>
+        </div>
+      </div>
+      <div class="error" id="error"></div>
+      <button class="btn" onclick="enviar()">Inscribirme al programa</button>
+    </div>
+
+    <div id="loading">
+      <div class="spinner"></div>
+      <p>La IA está buscando tu grupo ideal...</p>
+    </div>
+
+    <div id="resultado">
+      <div class="check">✓</div>
+      <h3>¡Ya estás inscripto!</h3>
+      <p>Te asignamos al grupo más compatible con tu perfil.</p>
+      <div class="grupo-card" id="grupo-card"></div>
+      <p style="margin-top:16px; font-size:13px; color:#888;">People se va a contactar con los detalles de tu primera clase.</p>
+    </div>
+  </div>
+</main>
+
+<footer>Humanitas · Sistema inteligente de clases de idiomas</footer>
+
+<script>
+  const sel = { idioma: null, nivel: null, zona: null };
+
+  document.querySelectorAll(".opt").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(`[data-g="${btn.dataset.g}"]`).forEach(b => b.classList.remove("sel"));
+      btn.classList.add("sel");
+      sel[btn.dataset.g] = btn.dataset.v;
+    });
+  });
+
+  async function enviar() {
+    const nombre = document.getElementById("nombre").value.trim();
+    const email  = document.getElementById("email").value.trim();
+    const err    = document.getElementById("error");
+
+    if (!nombre || !email || !sel.idioma || !sel.nivel || !sel.zona) {
+      err.textContent = "Completá todos los campos antes de continuar.";
+      err.style.display = "block"; return;
+    }
+    if (!email.includes("@")) {
+      err.textContent = "El email no parece válido.";
+      err.style.display = "block"; return;
+    }
+    err.style.display = "none";
+
+    document.getElementById("form-view").style.display = "none";
+    document.getElementById("loading").style.display = "block";
+
+    try {
+      const res = await fetch("/api/group", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre, email, idioma: sel.idioma, nivel: sel.nivel, zona: sel.zona })
+      });
+
+      const grupo = await res.json();
+
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("resultado").style.display = "block";
+      document.getElementById("grupo-card").innerHTML = `
+        <div class="lbl">Grupo asignado</div>
+        <div class="val">Grupo ${grupo.grupo_numero} · ${grupo.idioma} ${grupo.nivel}</div>
+        <div class="lbl">Horario sugerido</div>
+        <div class="val">${grupo.horario_sugerido}</div>
+        <div class="lbl">Compañeros</div>
+        <div class="val">${grupo.companeros.join(", ")}</div>
+        <div class="lbl">Mensaje</div>
+        <div class="val">${grupo.mensaje}</div>
+      `;
+    } catch (e) {
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("form-view").style.display = "block";
+      err.textContent = "Error al conectar con el servidor. Intentá de nuevo.";
+      err.style.display = "block";
+    }
+  }
+</script>
 </body>
 </html>
