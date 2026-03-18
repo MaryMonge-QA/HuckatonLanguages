@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.4">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="es"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1">&lt;meta charset="UTF-8"/&gt;</p>
+<p class="p1">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"/&gt;</p>
+<p class="p1">&lt;title&gt;Panel People · Humanitas&lt;/title&gt;</p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f0; color: #1a1a1a; min-height: 100vh; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* LOGIN */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>#login-view { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.login-card { background: #fff; border: 1px solid #e8e8e4; border-radius: 16px; padding: 40px; width: 100%; max-width: 380px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.login-card .logo { width: 40px; height: 40px; background: #534AB7; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 18px; margin-bottom: 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.login-card h2 { font-size: 22px; font-weight: 600; margin-bottom: 6px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.login-card p { font-size: 14px; color: #666; margin-bottom: 28px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.login-card label { display: block; font-size: 13px; font-weight: 500; color: #444; margin-bottom: 8px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.login-card input { width: 100%; padding: 11px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; outline: none; margin-bottom: 16px; background: #fafafa; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.login-card input:focus { border-color: #534AB7; background: #fff; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.login-card button { width: 100%; padding: 13px; background: #534AB7; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.login-card button:hover { background: #3C3489; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.login-error { display: none; color: #A32D2D; font-size: 13px; margin-top: 10px; text-align: center; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* HEADER */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>header { background: #fff; border-bottom: 1px solid #e8e8e4; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.header-left { display: flex; align-items: center; gap: 12px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.logo-sm { width: 32px; height: 32px; background: #534AB7; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 14px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>header h1 { font-size: 16px; font-weight: 500; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>header span { font-size: 13px; color: #888; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.logout-btn { font-size: 13px; color: #888; background: none; border: none; cursor: pointer; padding: 6px 12px; border-radius: 6px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.logout-btn:hover { background: #f0f0ec; color: #444; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* MAIN */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>#panel-view { display: none; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>main { max-width: 900px; margin: 32px auto; padding: 0 20px; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* STATS */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 28px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stat { background: var(--bg, #f5f5f0); border-radius: 10px; padding: 16px 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stat .num { font-size: 28px; font-weight: 600; color: var(--col, #1a1a1a); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stat .lbl { font-size: 12px; color: #888; margin-top: 2px; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* TABS */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid #e8e8e4; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.tab { padding: 10px 20px; font-size: 14px; color: #888; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.tab.active { color: #534AB7; border-bottom-color: #534AB7; font-weight: 500; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.tab:hover:not(.active) { color: #444; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* ALERTAS */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.alert-banner { background: #FCEBEB; border: 1px solid #F09595; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.alert-dot { width: 10px; height: 10px; background: #E24B4A; border-radius: 50%; flex-shrink: 0; animation: pulse 1.5s ease-in-out infinite; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.alert-banner p { font-size: 14px; color: #A32D2D; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.alert-banner strong { font-weight: 500; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* GRUPOS */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.grupos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.grupo-card { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.grupo-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.grupo-titulo { font-size: 15px; font-weight: 500; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.badge-ok { background: #E1F5EE; color: #085041; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.badge-warn { background: #FAEEDA; color: #633806; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.badge-alert { background: #FCEBEB; color: #A32D2D; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.grupo-info { font-size: 12px; color: #888; margin-bottom: 12px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.miembro { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid #f0f0ec; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.avatar { width: 28px; height: 28px; border-radius: 50%; background: #EEEDFE; color: #534AB7; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.miembro-nombre { font-size: 13px; color: #1a1a1a; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.miembro-zona { font-size: 11px; color: #aaa; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.ausente { color: #E24B4A; font-size: 11px; font-weight: 500; margin-left: auto; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* ALERTAS TAB */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.alertas-list { display: flex; flex-direction: column; gap: 12px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.alerta-item { background: #fff; border: 1px solid #F09595; border-radius: 10px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.alerta-avatar { width: 40px; height: 40px; border-radius: 50%; background: #FCEBEB; color: #E24B4A; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.alerta-info { flex: 1; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.alerta-nombre { font-size: 15px; font-weight: 500; margin-bottom: 3px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.alerta-detalle { font-size: 13px; color: #888; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.alerta-badge { font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 20px; background: #FCEBEB; color: #A32D2D; white-space: nowrap; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>.empty { text-align: center; padding: 48px 20px; color: #aaa; font-size: 14px; }</p>
+<p class="p1">&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- LOGIN --&gt;</p>
+<p class="p1">&lt;div id="login-view"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="login-card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="logo"&gt;H&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h2&gt;Panel de People&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;Acceso exclusivo para el equipo de People de Humanitas.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Contraseña&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;input type="password" id="password" placeholder="••••••••" onkeydown="if(event.key==='Enter') login()"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button onclick="login()"&gt;Ingresar&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="login-error" id="login-error"&gt;Contraseña incorrecta. Intentá de nuevo.&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- PANEL --&gt;</p>
+<p class="p1">&lt;div id="panel-view"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="header-left"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="logo-sm"&gt;H&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1&gt;Panel de People &lt;span&gt;· Clases de idiomas&lt;/span&gt;&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="logout-btn" onclick="logout()"&gt;Cerrar sesión&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/header&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;main&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Stats --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stats"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="stat" style="--bg:#EEEDFE;--col:#534AB7"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="num" id="stat-grupos"&gt;6&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="lbl"&gt;Grupos activos&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="stat" style="--bg:#E1F5EE;--col:#0F6E56"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="num" id="stat-humanders"&gt;24&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="lbl"&gt;Humanders inscriptos&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="stat" style="--bg:#FCEBEB;--col:#E24B4A"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="num" id="stat-alertas"&gt;2&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="lbl"&gt;Alertas activas&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="stat" style="--bg:#FAEEDA;--col:#854F0B"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="num"&gt;3&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="lbl"&gt;Ausencias = alerta&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Alerta banner --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="alert-banner"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="alert-dot"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p&gt;&lt;strong&gt;2 Humanders&lt;/strong&gt; superaron el umbral de ausencias consecutivas. Revisá la pestaña Alertas.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Tabs --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="tabs"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tab active" onclick="switchTab('grupos', this)"&gt;Grupos&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tab" onclick="switchTab('alertas', this)"&gt;Alertas&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- TAB: Grupos --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="tab-grupos"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="grupos-grid" id="grupos-grid"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- TAB: Alertas --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="tab-alertas" style="display:none"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="alertas-list" id="alertas-list"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/main&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const PASSWORD = "people2024";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const GRUPOS = [</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>id: 1, idioma: "Inglés", nivel: "B1-B2", horario: "18:00 ARG · 17:00 COL",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>estado: "ok",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>miembros: [</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ nombre: "Martín López", <span class="Apple-converted-space">  </span>zona: "Argentina", ausencias: 0 },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ nombre: "Diego Herrera",<span class="Apple-converted-space">  </span>zona: "Argentina", ausencias: 1 },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ nombre: "Laura Méndez", <span class="Apple-converted-space">  </span>zona: "Colombia",<span class="Apple-converted-space">  </span>ausencias: 0 },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ nombre: "Sofía Ramírez",<span class="Apple-converted-space">  </span>zona: "México",<span class="Apple-converted-space">    </span>ausencias: 0 },</p>
+<p class="p1"><span class="Apple-converted-space">      </span>]</p>
+<p class="p1"><span class="Apple-converted-space">    </span>},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>id: 2, idioma: "Inglés", nivel: "B2-C1", horario: "19:00 ARG · 18:00 COL",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>estado: "alerta",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>miembros: [</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ nombre: "María Castillo", zona: "Argentina", ausencias: 3 },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ nombre: "Carlos Vega",<span class="Apple-converted-space">    </span>zona: "España",<span class="Apple-converted-space">    </span>ausencias: 0 },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ nombre: "Ana Torres", <span class="Apple-converted-space">    </span>zona: "Argentina", ausencias: 1 },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ nombre: "Luis Moreno",<span class="Apple-converted-space">    </span>zona: "Colombia",<span class="Apple-converted-space">  </span>ausencias: 0 },</p>
+<p class="p1"><span class="Apple-converted-space">      </span>]</p>
+<p class="p1"><span class="Apple-converted-space">    </span>},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>id: 3, idioma: "Portugués", nivel: "A1-A2", horario: "17:00 ARG · 16:00 COL",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>estado: "ok",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>miembros: [</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ nombre: "Pablo Torres", <span class="Apple-converted-space">  </span>zona: "Argentina", ausencias: 0 },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ nombre: "Valentina Ruiz", zona: "Colombia",<span class="Apple-converted-space">  </span>ausencias: 0 },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ nombre: "Camila Sosa",<span class="Apple-converted-space">    </span>zona: "Argentina", ausencias: 2 },</p>
+<p class="p1"><span class="Apple-converted-space">      </span>]</p>
+<p class="p1"><span class="Apple-converted-space">    </span>},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>id: 4, idioma: "Francés", nivel: "A1-A2", horario: "18:00 ESP · 13:00 MX",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>estado: "warn",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>miembros: [</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ nombre: "Jorge Peña", <span class="Apple-converted-space">    </span>zona: "España",<span class="Apple-converted-space">    </span>ausencias: 3 },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ nombre: "Andrea Lima",<span class="Apple-converted-space">    </span>zona: "México",<span class="Apple-converted-space">    </span>ausencias: 0 },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ nombre: "Roberto Silva",<span class="Apple-converted-space">  </span>zona: "España",<span class="Apple-converted-space">    </span>ausencias: 1 },</p>
+<p class="p1"><span class="Apple-converted-space">      </span>]</p>
+<p class="p1"><span class="Apple-converted-space">    </span>},</p>
+<p class="p1"><span class="Apple-converted-space">  </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const ALERTAS = GRUPOS.flatMap(g =&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>g.miembros</p>
+<p class="p1"><span class="Apple-converted-space">      </span>.filter(m =&gt; m.ausencias &gt;= 3)</p>
+<p class="p1"><span class="Apple-converted-space">      </span>.map(m =&gt; ({ ...m, grupo: `Grupo ${g.id} · ${g.idioma} ${g.nivel}` }))</p>
+<p class="p1"><span class="Apple-converted-space">  </span>);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function login() {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const val = document.getElementById("password").value;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (val === PASSWORD) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById("login-view").style.display = "none";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById("panel-view").style.display = "block";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>renderGrupos();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>renderAlertas();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById("login-error").style.display = "block";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function logout() {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById("panel-view").style.display = "none";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById("login-view").style.display = "flex";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById("password").value = "";</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function switchTab(tab, el) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.querySelectorAll(".tab").forEach(t =&gt; t.classList.remove("active"));</p>
+<p class="p1"><span class="Apple-converted-space">    </span>el.classList.add("active");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById("tab-grupos").style.display<span class="Apple-converted-space">  </span>= tab === "grupos"<span class="Apple-converted-space">  </span>? "block" : "none";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById("tab-alertas").style.display = tab === "alertas" ? "block" : "none";</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function initials(nombre) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return nombre.split(" ").map(p =&gt; p[0]).slice(0, 2).join("").toUpperCase();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function renderGrupos() {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const grid = document.getElementById("grupos-grid");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>grid.innerHTML = GRUPOS.map(g =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const badgeClass = g.estado === "ok" ? "badge-ok" : g.estado === "warn" ? "badge-warn" : "badge-alert";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const badgeLabel = g.estado === "ok" ? "Sin alertas" : g.estado === "warn" ? "Atención" : "Alerta";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const miembrosHTML = g.miembros.map(m =&gt; `</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="miembro"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="avatar"&gt;${initials(m.nombre)}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="miembro-nombre"&gt;${m.nombre}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="miembro-zona"&gt;${m.zona}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>${m.ausencias &gt;= 3 ? `&lt;div class="ausente"&gt;⚠ ${m.ausencias} ausencias&lt;/div&gt;` : ""}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>`).join("");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>return `</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="grupo-card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="grupo-header"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="grupo-titulo"&gt;Grupo ${g.id} · ${g.idioma}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="badge ${badgeClass}"&gt;${badgeLabel}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="grupo-info"&gt;${g.nivel} · ${g.horario}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>${miembrosHTML}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}).join("");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function renderAlertas() {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const list = document.getElementById("alertas-list");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (ALERTAS.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>list.innerHTML = `&lt;div class="empty"&gt;Sin alertas activas. Todo en orden.&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>list.innerHTML = ALERTAS.map(a =&gt; `</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="alerta-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="alerta-avatar"&gt;${initials(a.nombre)}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="alerta-info"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="alerta-nombre"&gt;${a.nombre}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="alerta-detalle"&gt;${a.grupo} · ${a.zona}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="alerta-badge"&gt;⚠ ${a.ausencias} ausencias seguidas&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>`).join("");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
