@@ -1,57 +1,85 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
 const participantesExistentes = [
   { nombre: "Martín López",   idioma: "Inglés",    nivel: "B1", zona: "Argentina" },
   { nombre: "Sofía Ramírez",  idioma: "Inglés",    nivel: "B2", zona: "México" },
   { nombre: "Diego Herrera",  idioma: "Inglés",    nivel: "B1", zona: "Argentina" },
   { nombre: "Laura Méndez",   idioma: "Portugués", nivel: "A2", zona: "Colombia" },
-  { nombre: "Carlos Vega",    idioma: "Francés",   nivel: "A1", zona: "España" }
+  { nombre: "Carlos Vega",    idioma: "Francés",   nivel: "A1", zona: "España" },
+  { nombre: "María Castillo", idioma: "Inglés",    nivel: "B2", zona: "Argentina" },
+  { nombre: "Pablo Torres",   idioma: "Portugués", nivel: "A1", zona: "Argentina" },
+  { nombre: "Valentina Ruiz", idioma: "Francés",   nivel: "A2", zona: "Colombia" },
 ];
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).json({ error: "Solo POST" });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Método no permitido" });
+  }
 
   const { nombre, email, idioma, nivel, zona } = req.body;
-  if (!nombre || !idioma || !nivel || !zona) return res.status(400).json({ error: "Faltan datos" });
 
-  const todos = [...participantesExistentes, { nombre, idioma, nivel, zona }];
-  const lista = todos.map((p, i) => `${i + 1}. ${p.nombre} | ${p.idioma} | ${p.nivel} | ${p.zona}`).join("\n");
+  if (!nombre || !idioma || !nivel || !zona) {
+    return res.status(400).json({ error: "Faltan datos del formulario" });
+  }
 
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ 
-    model: "gemini-2.5-flash",
-    generationConfig: { responseMimeType: "application/json" } // Obliga a devolver JSON
-  });
+  const todos = [
+    ...participantesExistentes,
+    { nombre, idioma, nivel, zona }
+  ];
+
+  const lista = todos.map((p, i) =>
+    `${i + 1}. ${p.nombre} | Idioma: ${p.idioma} | Nivel: ${p.nivel} | Zona: ${p.zona}`
+  ).join("\n");
 
   const prompt = `
-    Sos un asistente de RRHH organizando clases de idiomas.
-    Lista actual:
-    ${lista}
+Sos un asistente que organiza clases de idiomas para una empresa.
 
-    Nuevo inscripto: ${nombre}. Asígnalo al grupo ideal.
-    
-    Reglas:
-    - Mismo idioma obligatorio.
-    - Niveles compatibles: A1+A2, B1+B2, C1 solo.
-    - Zona horaria: max 3 horas de diferencia (ARG y COL compatibles, ARG y ESP NO).
-    
-    Devuelve ÚNICAMENTE un JSON válido con este formato:
-    {
-      "grupo_numero": "A1",
-      "idioma": "${idioma}",
-      "nivel": "${nivel}",
-      "horario_sugerido": "18:00 (Hora local)",
-      "companeros": ["Nombre 1", "Nombre 2"],
-      "mensaje": "¡Bienvenido a Humanitas!"
-    }
-  `;
+Lista de participantes:
+${lista}
+
+El último participante (${nombre}) acaba de inscribirse. Asignalo al grupo más adecuado.
+
+Reglas:
+- Grupos de 4 a 6 personas (si hay pocos, está bien un grupo menor)
+- Mismo idioma obligatorio
+- Niveles compatibles: A1+A2 juntos, B1+B2 juntos, C1 solo
+- Zona horaria: diferencia máxima de 3 horas entre miembros
+- Argentina y Colombia son compatibles (1 hora de diferencia)
+- Argentina y España NO son compatibles (4-5 horas de diferencia)
+- México y Colombia son compatibles (1 hora de diferencia)
+
+Respondé ÚNICAMENTE con un JSON válido, sin texto extra, sin bloques de código:
+{
+  "grupo_numero": 1,
+  "idioma": "Inglés",
+  "nivel": "B1-B2",
+  "horario_sugerido": "18:00 ARG / 17:00 COL",
+  "companeros": ["Nombre 1", "Nombre 2"],
+  "mensaje": "Bienvenida corta y amigable, máximo 20 palabras."
+}
+`;
 
   try {
-    const result = await model.generateContent(prompt);
-    const grupo = JSON.parse(result.response.text());
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01"
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 500,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    const data  = await response.json();
+    const texto = data.content[0].text.replace(/```json|```/g, "").trim();
+    const grupo = JSON.parse(texto);
+
     return res.status(200).json(grupo);
+
   } catch (error) {
-    console.error("Error en Gemini:", error);
-    return res.status(500).json({ error: "Fallo el motor IA" });
+    console.error("Error llamando a Claude:", error);
+    return res.status(500).json({ error: "Error al procesar la solicitud" });
   }
 }
