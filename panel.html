@@ -47,7 +47,9 @@
   .badge-warn { background: #FAEEDA; color: #633806; }
   .badge-alert { background: #FCEBEB; color: #A32D2D; }
   .grupo-info { font-size: 12px; color: #888; margin-bottom: 12px; }
-  .miembro { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid #f0f0ec; }
+  .miembros-lista { display: flex; flex-direction: column; width: 100%; }
+  .miembro { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid #f0f0ec; width: 100%; }
+  .miembro-info { flex: 1; min-width: 0; }
   .avatar { width: 28px; height: 28px; border-radius: 50%; background: #EEEDFE; color: #534AB7; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
   .miembro-nombre { font-size: 13px; }
   .miembro-zona { font-size: 11px; color: #aaa; }
@@ -150,7 +152,7 @@ function renderGrupos() {
         <div class="miembro">
           <div class="avatar">${initials(m.nombre)}</div>
           <div><div class="miembro-nombre">${m.nombre}</div><div class="miembro-zona">${m.zona}</div></div>
-          ${m.ausencias>=3?`<div class="ausente">⚠ ${m.ausencias} ausencias`:""}
+          ${m.ausencias>=3?`<div class="ausente">⚠ ${m.ausencias} ausencias</div>`:""}
         </div>`).join("")}
     </div>`).join("");
 }
