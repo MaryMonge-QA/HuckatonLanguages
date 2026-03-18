@@ -1,6 +1,7 @@
 {
-  "version": 2,
+  "cleanUrls": true,
   "rewrites": [
+    { "source": "/panel", "destination": "/panel.html" },
     { "source": "/api/(.*)", "destination": "/api/$1" }
   ]
 }
