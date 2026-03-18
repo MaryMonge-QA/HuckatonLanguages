@@ -7,6 +7,8 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f0; color: #1a1a1a; min-height: 100vh; }
+
+  /* ── LOGIN ── */
   #login-view { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
   .login-card { background: #fff; border: 1px solid #e8e8e4; border-radius: 16px; padding: 40px; width: 100%; max-width: 380px; }
   .login-card .logo { width: 40px; height: 40px; background: #534AB7; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 18px; margin-bottom: 20px; }
@@ -18,6 +20,12 @@
   .login-card button { width: 100%; padding: 13px; background: #534AB7; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; }
   .login-card button:hover { background: #3C3489; }
   .login-error { display: none; color: #A32D2D; font-size: 13px; margin-top: 10px; text-align: center; }
+
+  /* ── PANEL ── */
+  /* FIX: panel oculto por defecto con clase, no inline */
+  #panel-view { display: none; }
+  #panel-view.visible { display: block; }
+
   header { background: #fff; border-bottom: 1px solid #e8e8e4; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
   .header-left { display: flex; align-items: center; gap: 12px; }
   .logo-sm { width: 32px; height: 32px; background: #534AB7; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 14px; }
@@ -25,46 +33,61 @@
   header span { font-size: 13px; color: #888; }
   .logout-btn { font-size: 13px; color: #888; background: none; border: none; cursor: pointer; padding: 6px 12px; border-radius: 6px; }
   .logout-btn:hover { background: #f0f0ec; color: #444; }
-  #panel-view { display: none; }
+
   main { max-width: 900px; margin: 32px auto; padding: 0 20px; }
+
+  /* ── STATS ── */
   .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 28px; }
   .stat { border-radius: 10px; padding: 16px 20px; background: var(--bg); }
   .stat .num { font-size: 28px; font-weight: 600; color: var(--col); }
   .stat .lbl { font-size: 12px; color: #888; margin-top: 2px; }
+
+  /* ── ALERT BANNER ── */
   .alert-banner { background: #FCEBEB; border: 1px solid #F09595; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
   .alert-dot { width: 10px; height: 10px; background: #E24B4A; border-radius: 50%; flex-shrink: 0; animation: pulse 1.5s ease-in-out infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
   .alert-banner p { font-size: 14px; color: #A32D2D; }
+
+  /* ── TABS ── */
   .tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid #e8e8e4; }
-  .tab { padding: 10px 20px; font-size: 14px; color: #888; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+  .tab { padding: 10px 20px; font-size: 14px; color: #888; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; user-select: none; }
   .tab.active { color: #534AB7; border-bottom-color: #534AB7; font-weight: 500; }
+  .tab:hover:not(.active) { color: #534AB7; }
+
+  /* ── GRUPOS GRID ── */
   .grupos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
   .grupo-card { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: 20px; }
   .grupo-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
   .grupo-titulo { font-size: 15px; font-weight: 500; }
-  .badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
-  .badge-ok { background: #E1F5EE; color: #085041; }
+  .badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+  .badge-ok   { background: #E1F5EE; color: #085041; }
   .badge-warn { background: #FAEEDA; color: #633806; }
-  .badge-alert { background: #FCEBEB; color: #A32D2D; }
+  .badge-alert{ background: #FCEBEB; color: #A32D2D; }
   .grupo-info { font-size: 12px; color: #888; margin-bottom: 12px; }
-  .miembros-lista { display: flex; flex-direction: column; width: 100%; }
-  .miembro { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid #f0f0ec; width: 100%; }
+
+  /* FIX: miembro row — flex con alineación correcta y sin desborde */
+  .miembros-lista { display: flex; flex-direction: column; width: 100%; overflow: hidden; }
+  .miembro { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid #f0f0ec; min-width: 0; width: 100%; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: #EEEDFE; color: #534AB7; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
   .miembro-info { flex: 1; min-width: 0; }
-  .avatar { width: 28px; height: 28px; border-radius: 50%; background: #EEEDFE; color: #534AB7; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
-  .miembro-nombre { font-size: 13px; }
+  .miembro-nombre { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .miembro-zona { font-size: 11px; color: #aaa; }
-  .ausente { color: #E24B4A; font-size: 11px; font-weight: 500; margin-left: auto; }
+  /* FIX: etiqueta de ausencia — flex-shrink:0 para que no se comprima */
+  .ausente { color: #E24B4A; font-size: 11px; font-weight: 500; flex-shrink: 0; margin-left: auto; white-space: nowrap; }
+
+  /* ── ALERTAS ── */
   .alertas-list { display: flex; flex-direction: column; gap: 12px; }
   .alerta-item { background: #fff; border: 1px solid #F09595; border-radius: 10px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; }
   .alerta-avatar { width: 40px; height: 40px; border-radius: 50%; background: #FCEBEB; color: #E24B4A; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0; }
-  .alerta-info { flex: 1; }
+  .alerta-info { flex: 1; min-width: 0; }
   .alerta-nombre { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
-  .alerta-detalle { font-size: 13px; color: #888; }
-  .alerta-badge { font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 20px; background: #FCEBEB; color: #A32D2D; white-space: nowrap; }
+  .alerta-detalle { font-size: 13px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .alerta-badge { font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 20px; background: #FCEBEB; color: #A32D2D; white-space: nowrap; flex-shrink: 0; }
 </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="login-view">
   <div class="login-card">
     <div class="logo">H</div>
@@ -77,6 +100,7 @@
   </div>
 </div>
 
+<!-- PANEL -->
 <div id="panel-view">
   <header>
     <div class="header-left">
@@ -86,15 +110,10 @@
     <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
   </header>
   <main>
-    <div class="stats">
-      <div class="stat" style="--bg:#EEEDFE;--col:#534AB7"><div class="num">6</div><div class="lbl">Grupos activos</div></div>
-      <div class="stat" style="--bg:#E1F5EE;--col:#0F6E56"><div class="num">24</div><div class="lbl">Humanders inscriptos</div></div>
-      <div class="stat" style="--bg:#FCEBEB;--col:#E24B4A"><div class="num">2</div><div class="lbl">Alertas activas</div></div>
-      <div class="stat" style="--bg:#FAEEDA;--col:#854F0B"><div class="num">3</div><div class="lbl">Ausencias = alerta</div></div>
-    </div>
-    <div class="alert-banner">
+    <div class="stats" id="stats-row"></div>
+    <div class="alert-banner" id="alert-banner">
       <div class="alert-dot"></div>
-      <p><strong>2 Humanders</strong> superaron el umbral de ausencias consecutivas. Revisá la pestaña Alertas.</p>
+      <p id="alert-text"></p>
     </div>
     <div class="tabs">
       <div class="tab active" onclick="switchTab('grupos',this)">Grupos</div>
@@ -107,6 +126,7 @@
 
 <script>
 const PASSWORD = "people2024";
+
 const GRUPOS = [
   { id:1, idioma:"Inglés", nivel:"B1-B2", horario:"18:00 ARG · 17:00 COL", estado:"ok",
     miembros:[{nombre:"Martín López",zona:"Argentina",ausencias:0},{nombre:"Diego Herrera",zona:"Argentina",ausencias:1},{nombre:"Laura Méndez",zona:"Colombia",ausencias:0},{nombre:"Sofía Ramírez",zona:"México",ausencias:0}]},
@@ -117,29 +137,53 @@ const GRUPOS = [
   { id:4, idioma:"Francés", nivel:"A1-A2", horario:"18:00 ESP · 13:00 MX", estado:"warn",
     miembros:[{nombre:"Jorge Peña",zona:"España",ausencias:3},{nombre:"Andrea Lima",zona:"México",ausencias:0},{nombre:"Roberto Silva",zona:"España",ausencias:1}]},
 ];
-const ALERTAS = GRUPOS.flatMap(g => g.miembros.filter(m => m.ausencias >= 3).map(m => ({...m, grupo:`Grupo ${g.id} · ${g.idioma} ${g.nivel}`})));
+
+const ALERTAS = GRUPOS.flatMap(g =>
+  g.miembros.filter(m => m.ausencias >= 3).map(m => ({...m, grupo:`Grupo ${g.id} · ${g.idioma} ${g.nivel}`}))
+);
+
+const totalMiembros = GRUPOS.reduce((a,g) => a + g.miembros.length, 0);
+const totalAlertas  = ALERTAS.length;
+const totalAusentes = GRUPOS.reduce((a,g) => a + g.miembros.filter(m => m.ausencias >= 3).length, 0);
 
 function login() {
   if (document.getElementById("password").value === PASSWORD) {
     document.getElementById("login-view").style.display = "none";
-    document.getElementById("panel-view").style.display = "block";
-    renderGrupos(); renderAlertas();
+    document.getElementById("panel-view").classList.add("visible");
+    renderStats(); renderGrupos(); renderAlertas();
   } else {
     document.getElementById("login-error").style.display = "block";
   }
 }
 function logout() {
-  document.getElementById("panel-view").style.display = "none";
+  document.getElementById("panel-view").classList.remove("visible");
   document.getElementById("login-view").style.display = "flex";
   document.getElementById("password").value = "";
 }
 function switchTab(tab, el) {
   document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
   el.classList.add("active");
-  document.getElementById("tab-grupos").style.display = tab==="grupos" ? "block" : "none";
+  document.getElementById("tab-grupos").style.display  = tab==="grupos"  ? "block" : "none";
   document.getElementById("tab-alertas").style.display = tab==="alertas" ? "block" : "none";
 }
 function initials(n) { return n.split(" ").map(p=>p[0]).slice(0,2).join("").toUpperCase(); }
+
+function renderStats() {
+  document.getElementById("stats-row").innerHTML = `
+    <div class="stat" style="--bg:#EEEDFE;--col:#534AB7"><div class="num">${GRUPOS.length}</div><div class="lbl">Grupos activos</div></div>
+    <div class="stat" style="--bg:#E1F5EE;--col:#0F6E56"><div class="num">${totalMiembros}</div><div class="lbl">Humanders inscriptos</div></div>
+    <div class="stat" style="--bg:#FCEBEB;--col:#E24B4A"><div class="num">${totalAlertas}</div><div class="lbl">Alertas activas</div></div>
+    <div class="stat" style="--bg:#FAEEDA;--col:#854F0B"><div class="num">${totalAusentes}</div><div class="lbl">Ausencias = alerta</div></div>`;
+
+  const banner = document.getElementById("alert-banner");
+  if (totalAlertas === 0) {
+    banner.style.display = "none";
+  } else {
+    document.getElementById("alert-text").innerHTML =
+      `<strong>${totalAlertas} ${totalAlertas===1?"Humander":"Humanders"}</strong> superaron el umbral de ausencias consecutivas. Revisá la pestaña Alertas.`;
+  }
+}
+
 function renderGrupos() {
   document.getElementById("grupos-grid").innerHTML = GRUPOS.map(g => `
     <div class="grupo-card">
@@ -157,11 +201,11 @@ function renderGrupos() {
               <div class="miembro-zona">${m.zona}</div>
             </div>
             ${m.ausencias>=3?`<div class="ausente">⚠ ${m.ausencias} ausencias</div>`:""}
-          </div>
-        `).join("")}
+          </div>`).join("")}
       </div>
     </div>`).join("");
 }
+
 function renderAlertas() {
   document.getElementById("alertas-list").innerHTML = ALERTAS.length === 0
     ? `<div style="text-align:center;padding:48px;color:#aaa;font-size:14px">Sin alertas activas</div>`
