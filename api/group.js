@@ -13,7 +13,8 @@ export default async function handler(req, res) {
 
   const saveRes = await fetch(GAS_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    redirect: "follow",
+    headers: { "Content-Type": "text/plain" },
     body: JSON.stringify({
       action: "add",
       sheet: "formResponses1",
@@ -29,9 +30,11 @@ export default async function handler(req, res) {
     })
   });
 
+  const responseText = await saveRes.text();
+  console.log("Apps Script status:", saveRes.status, "body:", responseText);
+
   if (!saveRes.ok) {
-    console.error("Error guardando en Apps Script:", await saveRes.text());
-    return res.status(502).json({ error: "Error al guardar el registro" });
+    return res.status(502).json({ error: "Error al guardar el registro", detail: responseText });
   }
 
   return res.status(200).json({ ok: true });
