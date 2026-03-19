@@ -71,7 +71,10 @@ Respondé ÚNICAMENTE con un JSON array válido, sin texto extra, sin bloques de
     body: JSON.stringify({
       model: "claude-sonnet-4-6",
       max_tokens: 4000,
-      messages: [{ role: "user", content: prompt }]
+      messages: [
+        { role: "user", content: prompt },
+        { role: "assistant", content: "[" }
+      ]
     })
   });
 
@@ -82,7 +85,7 @@ Respondé ÚNICAMENTE con un JSON array válido, sin texto extra, sin bloques de
 
   const claudeJson = await claudeRes.json();
   console.log("Claude response:", JSON.stringify(claudeJson).slice(0, 1000));
-  const rawText = claudeJson.content[0].text;
+  const rawText = "[" + claudeJson.content[0].text;
 
   // Extraer el primer array JSON balanceado
   function extractArray(text) {
