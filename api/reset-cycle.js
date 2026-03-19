@@ -20,6 +20,7 @@ export default async function handler(req, res) {
 
   await deleteAll("grupos");
   await deleteAll("asistencia");
+  await deleteAll("inscripciones");
 
   return res.status(200).json({ ok: true });
 }

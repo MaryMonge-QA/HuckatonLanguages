@@ -202,7 +202,7 @@ function logout() {
 function switchTab(tab, el) {
   document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
   el.classList.add("active");
-  ["dashboard","grupos","lista","historial","alertas"].forEach(t => {
+  ["dashboard","grupos","lista","alertas"].forEach(t => {
     const el = document.getElementById("tab-" + t);
     if (el) el.style.display = t === tab ? "block" : "none";
   });
@@ -279,21 +279,18 @@ function renderPanel() {
       <div class="tab active" onclick="switchTab('dashboard',this)">Dashboard</div>
       <div class="tab" onclick="switchTab('grupos',this)">Grupos</div>
       <div class="tab" onclick="switchTab('lista',this)">Pasar Lista</div>
-      <div class="tab" onclick="switchTab('historial',this)">Historial</div>
       <div class="tab" onclick="switchTab('alertas',this)">Alertas</div>
     </div>
 
     <div id="tab-dashboard"></div>
     <div id="tab-grupos"    style="display:none"></div>
     <div id="tab-lista"     style="display:none"></div>
-    <div id="tab-historial" style="display:none"></div>
     <div id="tab-alertas"   style="display:none"></div>
   `;
 
   renderDashboard();
   renderGrupos();
   renderLista();
-  renderHistorial();
   renderAlertas();
 }
 
@@ -386,7 +383,7 @@ function renderLista() {
     : `<option value="">Seleccioná un grupo</option>` +
       state.grupos
         .filter(g => !gruposYaTomados.has(String(g.grupoNumero)))
-        .map(g => `<option value="${g.grupoNumero}">Grupo ${g.grupoNumero} · ${g.idioma} ${g.nivel}</option>`)
+        .map(g => `<option value="${g.grupoNumero}">Grupo ${g.grupoNumero} · ${g.idioma}${g.nivel ? " " + g.nivel : ""}</option>`)
         .join("");
 
   document.getElementById("tab-lista").innerHTML = `
@@ -576,7 +573,7 @@ function renderAlertas() {
 
 // ── BORRAR CICLO ──────────────────────────────────────
 async function borrarCiclo() {
-  const confirmar = confirm("¿Seguro que querés borrar el ciclo actual?\nSe van a eliminar todos los grupos y el historial de asistencia.\n\nLos inscriptos se mantienen.");
+  const confirmar = confirm("¿Seguro que querés borrar el ciclo actual?\nSe van a eliminar todos los grupos, el historial de asistencia y las inscripciones.");
   if (!confirmar) return;
 
   const btn = document.getElementById("reset-btn");
