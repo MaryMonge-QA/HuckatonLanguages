@@ -1,4 +1,4 @@
-const GAS_URL        = "https://script.google.com/a/macros/humand.co/s/AKfycbxotkr2FO1P8f1b4g-dEfbSezW2cMCzpVmXr4dJ6UCtpvCr0U7PD4YfkAA237cQc59j/exec";
+const GAS_URL        = "https://script.google.com/macros/s/AKfycbxotkr2FO1P8f1b4g-dEfbSezW2cMCzpVmXr4dJ6UCtpvCr0U7PD4YfkAA237cQc59j/exec";
 const EMAILJS_URL    = "https://api.emailjs.com/api/v1.0/email/send";
 const EMAILJS_SERVICE  = "service_9n8jsmc";
 const EMAILJS_TEMPLATE = "template_1vdttpi";
