@@ -1,4 +1,4 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxotkr2FO1P8f1b4g-dEfbSezW2cMCzpVmXr4dJ6UCtpvCr0U7PD4YfkAA237cQc59j/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzatCJ2avezijxtbG2hj4-eFFxVyYAjlGIMG83z4eVr0TB_lSrYxZ7OnqGBAsybsBWM/exec";
 
 async function clearSheet(sheet) {
   await fetch(GAS_URL, {
