@@ -87,20 +87,28 @@
       <div class="field">
         <label>¿Cuál es tu nivel actual? *</label>
         <div class="options">
-          <div class="opt" data-g="nivel" data-v="A1">A1</div>
-          <div class="opt" data-g="nivel" data-v="A2">A2</div>
-          <div class="opt" data-g="nivel" data-v="B1">B1</div>
-          <div class="opt" data-g="nivel" data-v="B2">B2</div>
-          <div class="opt" data-g="nivel" data-v="C1">C1</div>
+          <div class="opt" data-g="nivel" data-v="A1 - Principiante">A1 - Principiante</div>
+          <div class="opt" data-g="nivel" data-v="A2 - Básico">A2 - Básico</div>
+          <div class="opt" data-g="nivel" data-v="B1 - Intermedio">B1 - Intermedio</div>
+          <div class="opt" data-g="nivel" data-v="B2 - Intermedio Alto">B2 - Intermedio Alto</div>
+          <div class="opt" data-g="nivel" data-v="C1 - Avanzado">C1 - Avanzado</div>
         </div>
       </div>
       <div class="field">
         <label>¿En qué zona horaria estás? *</label>
         <div class="options">
-          <div class="opt" data-g="zona" data-v="Argentina">Argentina</div>
-          <div class="opt" data-g="zona" data-v="México">México</div>
-          <div class="opt" data-g="zona" data-v="España">España</div>
-          <div class="opt" data-g="zona" data-v="Colombia">Colombia</div>
+          <div class="opt" data-g="zona" data-v="UTC-3 — Argentina">Argentina (UTC-3)</div>
+          <div class="opt" data-g="zona" data-v="UTC-5 — Colombia, Perú, Ecuador">Colombia / Perú (UTC-5)</div>
+          <div class="opt" data-g="zona" data-v="UTC-6 — México, Centroamérica">México (UTC-6)</div>
+          <div class="opt" data-g="zona" data-v="UTC+1 — España">España (UTC+1)</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>¿En qué franja horaria podés tomar clases? *</label>
+        <div class="options">
+          <div class="opt" data-g="franja" data-v="Mañana (8am - 12pm hora local)">Mañana (8am - 12pm)</div>
+          <div class="opt" data-g="franja" data-v="Tarde (2pm - 6pm hora local)">Tarde (2pm - 6pm)</div>
+          <div class="opt" data-g="franja" data-v="Noche (6pm - 9pm hora local)">Noche (6pm - 9pm)</div>
         </div>
       </div>
       <div class="error" id="error"></div>
@@ -125,7 +133,7 @@
 <footer>Humanitas · Sistema inteligente de clases de idiomas</footer>
 
 <script>
-  const sel = { idioma: null, nivel: null, zona: null };
+  const sel = { idioma: null, nivel: null, zona: null, franja: null };
 
   document.querySelectorAll(".opt").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -140,7 +148,7 @@
     const email  = document.getElementById("email").value.trim();
     const err    = document.getElementById("error");
 
-    if (!nombre || !email || !sel.idioma || !sel.nivel || !sel.zona) {
+    if (!nombre || !email || !sel.idioma || !sel.nivel || !sel.zona || !sel.franja) {
       err.textContent = "Completá todos los campos antes de continuar.";
       err.style.display = "block"; return;
     }
@@ -157,7 +165,14 @@
       const res = await fetch("/api/group", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nombre, email, idioma: sel.idioma, nivel: sel.nivel, zona: sel.zona })
+        body: JSON.stringify({
+          nombre,
+          email,
+          idioma: sel.idioma,
+          nivel: sel.nivel,
+          zona: sel.zona,
+          franja: sel.franja
+        })
       });
 
       const grupo = await res.json();

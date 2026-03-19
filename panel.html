@@ -22,7 +22,6 @@
   .login-error { display: none; color: #A32D2D; font-size: 13px; margin-top: 10px; text-align: center; }
 
   /* ── PANEL ── */
-  /* FIX: panel oculto por defecto con clase, no inline */
   #panel-view { display: none; }
   #panel-view.visible { display: block; }
 
@@ -35,6 +34,11 @@
   .logout-btn:hover { background: #f0f0ec; color: #444; }
 
   main { max-width: 900px; margin: 32px auto; padding: 0 20px; }
+
+  /* ── LOADING STATE ── */
+  .panel-loading { text-align: center; padding: 60px 0; color: #888; font-size: 14px; }
+  .panel-spinner { width: 32px; height: 32px; border: 3px solid #EEEDFE; border-top-color: #534AB7; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   /* ── STATS ── */
   .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 28px; }
@@ -65,15 +69,12 @@
   .badge-alert{ background: #FCEBEB; color: #A32D2D; }
   .grupo-info { font-size: 12px; color: #888; margin-bottom: 12px; }
 
-  /* FIX: miembro row — flex con alineación correcta y sin desborde */
-  .miembros-lista { display: flex; flex-direction: column; width: 100%; overflow: hidden; }
-  .miembro { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid #f0f0ec; min-width: 0; width: 100%; }
+  .miembros-lista { display: block; width: 100%; }
+  .miembro { display: grid; grid-template-columns: 32px 1fr auto; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid #f0f0ec; width: 100%; }
   .avatar { width: 32px; height: 32px; border-radius: 50%; background: #EEEDFE; color: #534AB7; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
   .miembro-info { flex: 1; min-width: 0; }
   .miembro-nombre { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .miembro-zona { font-size: 11px; color: #aaa; }
-  /* FIX: etiqueta de ausencia — flex-shrink:0 para que no se comprima */
-  .ausente { color: #E24B4A; font-size: 11px; font-weight: 500; flex-shrink: 0; margin-left: auto; white-space: nowrap; }
 
   /* ── ALERTAS ── */
   .alertas-list { display: flex; flex-direction: column; gap: 12px; }
@@ -83,6 +84,9 @@
   .alerta-nombre { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
   .alerta-detalle { font-size: 13px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .alerta-badge { font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 20px; background: #FCEBEB; color: #A32D2D; white-space: nowrap; flex-shrink: 0; }
+
+  /* ── EMPTY STATE ── */
+  .empty { text-align: center; padding: 48px; color: #aaa; font-size: 14px; }
 </style>
 </head>
 <body>
@@ -110,8 +114,94 @@
     <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
   </header>
   <main>
+    <div id="panel-content">
+      <div class="panel-loading">
+        <div class="panel-spinner"></div>
+        Cargando datos...
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const PASSWORD   = "people2024";
+const SHEETY_URL = "https://api.sheety.co/782c0e1ef97d36c7932073da8a8a8954/sistemaClasesIdiomas";
+
+function login() {
+  if (document.getElementById("password").value === PASSWORD) {
+    document.getElementById("login-view").style.display = "none";
+    document.getElementById("panel-view").classList.add("visible");
+    cargarDatos();
+  } else {
+    document.getElementById("login-error").style.display = "block";
+  }
+}
+
+function logout() {
+  document.getElementById("panel-view").classList.remove("visible");
+  document.getElementById("login-view").style.display = "flex";
+  document.getElementById("password").value = "";
+}
+
+function switchTab(tab, el) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  el.classList.add("active");
+  document.getElementById("tab-grupos").style.display  = tab === "grupos"  ? "block" : "none";
+  document.getElementById("tab-alertas").style.display = tab === "alertas" ? "block" : "none";
+}
+
+function initials(n) {
+  return (n || "?").split(" ").map(p => p[0]).slice(0, 2).join("").toUpperCase();
+}
+
+async function cargarDatos() {
+  try {
+    // Leer grupos e inscriptos desde Sheety en paralelo
+    const [gruposRes, inscriptosRes, alertasRes] = await Promise.all([
+      fetch(`${SHEETY_URL}/grupos`),
+      fetch(`${SHEETY_URL}/formResponses1`),
+      fetch("/api/attendance")
+    ]);
+
+    const gruposData     = gruposRes.ok     ? await gruposRes.json()     : { grupos: [] };
+    const inscriptosData = inscriptosRes.ok ? await inscriptosRes.json() : { formResponses1: [] };
+    const alertasData    = alertasRes.ok    ? await alertasRes.json()    : { alertas: [] };
+
+    const filas      = gruposData.grupos             || [];
+    const inscriptos = inscriptosData.formResponses1 || [];
+    const alertas    = alertasData.alertas           || [];
+
+    // Cada fila ES un grupo, miembros es string "Nombre1, Nombre2"
+    const nombresConAlerta = new Set(alertas.map(a => a.nombre));
+    const grupos = filas.map(g => {
+      const listaMiembros = (g.miembros || "").split(",").map(m => m.trim()).filter(Boolean);
+      const tieneAlerta   = listaMiembros.some(m => nombresConAlerta.has(m));
+      return {
+        grupoNumero:     g.grupoNumero,
+        idioma:          g.idioma,
+        nivel:           g.nivel,
+        horarioSugerido: g.horarioSugerido,
+        estado:          tieneAlerta ? "alerta" : (g.estado || "ok"),
+        miembros:        listaMiembros
+      };
+    });
+
+    renderPanel(grupos, inscriptos, alertas);
+
+  } catch (e) {
+    console.error("Error cargando datos:", e);
+    document.getElementById("panel-content").innerHTML =
+      `<div class="empty">Error al cargar los datos. Intentá recargar la página.</div>`;
+  }
+}
+
+function renderPanel(grupos, inscriptos, alertas) {
+  const totalMiembros = inscriptos.length;
+  const totalAlertas  = alertas.length;
+
+  document.getElementById("panel-content").innerHTML = `
     <div class="stats" id="stats-row"></div>
-    <div class="alert-banner" id="alert-banner">
+    <div class="alert-banner" id="alert-banner" style="display:none">
       <div class="alert-dot"></div>
       <p id="alert-text"></p>
     </div>
@@ -121,103 +211,60 @@
     </div>
     <div id="tab-grupos"><div class="grupos-grid" id="grupos-grid"></div></div>
     <div id="tab-alertas" style="display:none"><div class="alertas-list" id="alertas-list"></div></div>
-  </main>
-</div>
+  `;
 
-<script>
-const PASSWORD = "people2024";
-
-const GRUPOS = [
-  { id:1, idioma:"Inglés", nivel:"B1-B2", horario:"18:00 ARG · 17:00 COL", estado:"ok",
-    miembros:[{nombre:"Martín López",zona:"Argentina",ausencias:0},{nombre:"Diego Herrera",zona:"Argentina",ausencias:1},{nombre:"Laura Méndez",zona:"Colombia",ausencias:0},{nombre:"Sofía Ramírez",zona:"México",ausencias:0}]},
-  { id:2, idioma:"Inglés", nivel:"B2-C1", horario:"19:00 ARG · 18:00 COL", estado:"alerta",
-    miembros:[{nombre:"María Castillo",zona:"Argentina",ausencias:3},{nombre:"Carlos Vega",zona:"España",ausencias:0},{nombre:"Ana Torres",zona:"Argentina",ausencias:1},{nombre:"Luis Moreno",zona:"Colombia",ausencias:0}]},
-  { id:3, idioma:"Portugués", nivel:"A1-A2", horario:"17:00 ARG · 16:00 COL", estado:"ok",
-    miembros:[{nombre:"Pablo Torres",zona:"Argentina",ausencias:0},{nombre:"Valentina Ruiz",zona:"Colombia",ausencias:0},{nombre:"Camila Sosa",zona:"Argentina",ausencias:2}]},
-  { id:4, idioma:"Francés", nivel:"A1-A2", horario:"18:00 ESP · 13:00 MX", estado:"warn",
-    miembros:[{nombre:"Jorge Peña",zona:"España",ausencias:3},{nombre:"Andrea Lima",zona:"México",ausencias:0},{nombre:"Roberto Silva",zona:"España",ausencias:1}]},
-];
-
-const ALERTAS = GRUPOS.flatMap(g =>
-  g.miembros.filter(m => m.ausencias >= 3).map(m => ({...m, grupo:`Grupo ${g.id} · ${g.idioma} ${g.nivel}`}))
-);
-
-const totalMiembros = GRUPOS.reduce((a,g) => a + g.miembros.length, 0);
-const totalAlertas  = ALERTAS.length;
-const totalAusentes = GRUPOS.reduce((a,g) => a + g.miembros.filter(m => m.ausencias >= 3).length, 0);
-
-function login() {
-  if (document.getElementById("password").value === PASSWORD) {
-    document.getElementById("login-view").style.display = "none";
-    document.getElementById("panel-view").classList.add("visible");
-    renderStats(); renderGrupos(); renderAlertas();
-  } else {
-    document.getElementById("login-error").style.display = "block";
-  }
-}
-function logout() {
-  document.getElementById("panel-view").classList.remove("visible");
-  document.getElementById("login-view").style.display = "flex";
-  document.getElementById("password").value = "";
-}
-function switchTab(tab, el) {
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  el.classList.add("active");
-  document.getElementById("tab-grupos").style.display  = tab==="grupos"  ? "block" : "none";
-  document.getElementById("tab-alertas").style.display = tab==="alertas" ? "block" : "none";
-}
-function initials(n) { return n.split(" ").map(p=>p[0]).slice(0,2).join("").toUpperCase(); }
-
-function renderStats() {
+  // Stats
   document.getElementById("stats-row").innerHTML = `
-    <div class="stat" style="--bg:#EEEDFE;--col:#534AB7"><div class="num">${GRUPOS.length}</div><div class="lbl">Grupos activos</div></div>
+    <div class="stat" style="--bg:#EEEDFE;--col:#534AB7"><div class="num">${grupos.length}</div><div class="lbl">Grupos activos</div></div>
     <div class="stat" style="--bg:#E1F5EE;--col:#0F6E56"><div class="num">${totalMiembros}</div><div class="lbl">Humanders inscriptos</div></div>
-    <div class="stat" style="--bg:#FCEBEB;--col:#E24B4A"><div class="num">${totalAlertas}</div><div class="lbl">Alertas activas</div></div>
-    <div class="stat" style="--bg:#FAEEDA;--col:#854F0B"><div class="num">${totalAusentes}</div><div class="lbl">Ausencias = alerta</div></div>`;
+    <div class="stat" style="--bg:#FCEBEB;--col:#E24B4A"><div class="num">${totalAlertas}</div><div class="lbl">Alertas activas</div></div>`;
 
-  const banner = document.getElementById("alert-banner");
-  if (totalAlertas === 0) {
-    banner.style.display = "none";
-  } else {
+  // Banner de alerta
+  if (totalAlertas > 0) {
+    document.getElementById("alert-banner").style.display = "flex";
     document.getElementById("alert-text").innerHTML =
-      `<strong>${totalAlertas} ${totalAlertas===1?"Humander":"Humanders"}</strong> superaron el umbral de ausencias consecutivas. Revisá la pestaña Alertas.`;
+      `<strong>${totalAlertas} ${totalAlertas === 1 ? "Humander" : "Humanders"}</strong> superaron el umbral de ausencias consecutivas. Revisá la pestaña Alertas.`;
   }
-}
 
-function renderGrupos() {
-  document.getElementById("grupos-grid").innerHTML = GRUPOS.map(g => `
-    <div class="grupo-card">
-      <div class="grupo-header">
-        <div class="grupo-titulo">Grupo ${g.id} · ${g.idioma}</div>
-        <span class="badge badge-${g.estado}">${g.estado==="ok"?"Sin alertas":g.estado==="warn"?"Atención":"Alerta"}</span>
-      </div>
-      <div class="grupo-info">${g.nivel} · ${g.horario}</div>
-      <div class="miembros-lista">
-        ${g.miembros.map(m=>`
-          <div class="miembro">
-            <div class="avatar">${initials(m.nombre)}</div>
-            <div class="miembro-info">
-              <div class="miembro-nombre">${m.nombre}</div>
-              <div class="miembro-zona">${m.zona}</div>
-            </div>
-            ${m.ausencias>=3?`<div class="ausente">⚠ ${m.ausencias} ausencias</div>`:""}
-          </div>`).join("")}
-      </div>
-    </div>`).join("");
-}
+  // Grupos
+  if (grupos.length === 0) {
+    document.getElementById("grupos-grid").innerHTML =
+      `<div class="empty">Aún no hay grupos formados. Los grupos se crean cuando los participantes se inscriben.</div>`;
+  } else {
+    document.getElementById("grupos-grid").innerHTML = grupos.map(g => `
+      <div class="grupo-card">
+        <div class="grupo-header">
+          <div class="grupo-titulo">Grupo ${g.grupoNumero} · ${g.idioma}</div>
+          <span class="badge badge-${g.estado}">${g.estado === "ok" ? "Sin alertas" : "Alerta"}</span>
+        </div>
+        <div class="grupo-info">${g.nivel} · ${g.horarioSugerido || "—"}</div>
+        <div class="miembros-lista">
+          ${g.miembros.map(nombre => `
+            <div class="miembro">
+              <div class="avatar">${initials(nombre)}</div>
+              <div class="miembro-info">
+                <div class="miembro-nombre">${nombre}</div>
+              </div>
+            </div>`).join("")}
+        </div>
+      </div>`).join("");
+  }
 
-function renderAlertas() {
-  document.getElementById("alertas-list").innerHTML = ALERTAS.length === 0
-    ? `<div style="text-align:center;padding:48px;color:#aaa;font-size:14px">Sin alertas activas</div>`
-    : ALERTAS.map(a=>`
+  // Alertas
+  if (alertas.length === 0) {
+    document.getElementById("alertas-list").innerHTML =
+      `<div class="empty">Sin alertas activas. Todos los participantes tienen buena asistencia.</div>`;
+  } else {
+    document.getElementById("alertas-list").innerHTML = alertas.map(a => `
       <div class="alerta-item">
         <div class="alerta-avatar">${initials(a.nombre)}</div>
         <div class="alerta-info">
           <div class="alerta-nombre">${a.nombre}</div>
-          <div class="alerta-detalle">${a.grupo} · ${a.zona}</div>
+          <div class="alerta-detalle">Grupo ${a.grupoNumero} · ${a.email}</div>
         </div>
-        <div class="alerta-badge">⚠ ${a.ausencias} ausencias seguidas</div>
+        <div class="alerta-badge">⚠ ${a.ausenciasConsecutivas} ausencias seguidas</div>
       </div>`).join("");
+  }
 }
 </script>
 </body>
