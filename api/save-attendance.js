@@ -1,4 +1,4 @@
-const SHEETY_URL = "https://api.sheety.co/782c0e1ef97d36c7932073da8a8a8954/sistemaClasesIdiomas";
+const GAS_URL = "https://script.google.com/a/macros/humand.co/s/AKfycbxotkr2FO1P8f1b4g-dEfbSezW2cMCzpVmXr4dJ6UCtpvCr0U7PD4YfkAA237cQc59j/exec";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -16,11 +16,13 @@ export default async function handler(req, res) {
   }
 
   for (const alumno of alumnos) {
-    const postRes = await fetch(`${SHEETY_URL}/asistencia`, {
+    const postRes = await fetch(GAS_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        asistencia: {
+        action: "add",
+        sheet: "asistencia",
+        data: {
           nombre:  alumno.nombre,
           fecha,
           grupo,

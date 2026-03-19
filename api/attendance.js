@@ -1,4 +1,4 @@
-const SHEETY_URL     = "https://api.sheety.co/782c0e1ef97d36c7932073da8a8a8954/sistemaClasesIdiomas";
+const GAS_URL        = "https://script.google.com/a/macros/humand.co/s/AKfycbxotkr2FO1P8f1b4g-dEfbSezW2cMCzpVmXr4dJ6UCtpvCr0U7PD4YfkAA237cQc59j/exec";
 const EMAILJS_URL    = "https://api.emailjs.com/api/v1.0/email/send";
 const EMAILJS_SERVICE  = "service_9n8jsmc";
 const EMAILJS_TEMPLATE = "template_1vdttpi";
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Método no permitido" });
   }
 
-  const r = await fetch(`${SHEETY_URL}/asistencia`);
+  const r = await fetch(`${GAS_URL}?sheet=asistencia`);
   if (!r.ok) return res.status(502).json({ error: "Error al leer la asistencia" });
 
   const registros = (await r.json()).asistencia || [];

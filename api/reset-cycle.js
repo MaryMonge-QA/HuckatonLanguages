@@ -1,11 +1,15 @@
-const SHEETY_URL = "https://api.sheety.co/782c0e1ef97d36c7932073da8a8a8954/sistemaClasesIdiomas";
+const GAS_URL = "https://script.google.com/a/macros/humand.co/s/AKfycbxotkr2FO1P8f1b4g-dEfbSezW2cMCzpVmXr4dJ6UCtpvCr0U7PD4YfkAA237cQc59j/exec";
 
 async function deleteAll(sheet) {
-  const res = await fetch(`${SHEETY_URL}/${sheet}`);
+  const res = await fetch(`${GAS_URL}?sheet=${sheet}`);
   if (!res.ok) return;
   const rows = (await res.json())[sheet] || [];
   for (const row of rows) {
-    await fetch(`${SHEETY_URL}/${sheet}/${row.id}`, { method: "DELETE" }).catch(() => {});
+    await fetch(GAS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "delete", sheet, id: row.id })
+    }).catch(() => {});
   }
 }
 

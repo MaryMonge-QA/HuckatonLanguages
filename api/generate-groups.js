@@ -1,4 +1,4 @@
-const SHEETY_URL = "https://api.sheety.co/782c0e1ef97d36c7932073da8a8a8954/sistemaClasesIdiomas";
+const GAS_URL = "https://script.google.com/a/macros/humand.co/s/AKfycbxotkr2FO1P8f1b4g-dEfbSezW2cMCzpVmXr4dJ6UCtpvCr0U7PD4YfkAA237cQc59j/exec";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   }
 
   // 1. Leer todos los inscriptos
-  const inscriptosRes = await fetch(`${SHEETY_URL}/formResponses1`);
+  const inscriptosRes = await fetch(`${GAS_URL}?sheet=formResponses1`);
   if (!inscriptosRes.ok) {
     return res.status(502).json({ error: "Error al leer los inscriptos" });
   }
@@ -95,21 +95,27 @@ Respondé ÚNICAMENTE con un JSON array válido, sin texto extra, sin bloques de
   }
 
   // 4. Borrar grupos anteriores del Sheet (uno por uno)
-  const gruposActualesRes = await fetch(`${SHEETY_URL}/grupos`);
+  const gruposActualesRes = await fetch(`${GAS_URL}?sheet=grupos`);
   if (gruposActualesRes.ok) {
     const gruposActuales = (await gruposActualesRes.json()).grupos || [];
     for (const g of gruposActuales) {
-      await fetch(`${SHEETY_URL}/grupos/${g.id}`, { method: "DELETE" }).catch(() => {});
+      await fetch(GAS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "delete", sheet: "grupos", id: g.id })
+      }).catch(() => {});
     }
   }
 
   // 5. Guardar los grupos nuevos en el Sheet (uno por uno para evitar rate limit)
   for (const g of grupos) {
-    const postRes = await fetch(`${SHEETY_URL}/grupos`, {
+    const postRes = await fetch(GAS_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        grupo: {
+        action: "add",
+        sheet: "grupos",
+        data: {
           grupoNumero:    g.grupo_numero,
           idioma:          g.idioma,
           nivel:           g.nivel,

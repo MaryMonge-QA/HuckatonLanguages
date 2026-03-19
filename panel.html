@@ -178,7 +178,7 @@
 
 <script>
 const PASSWORD   = "people2024";
-const SHEETY_URL = "https://api.sheety.co/782c0e1ef97d36c7932073da8a8a8954/sistemaClasesIdiomas";
+const GAS_URL = "https://script.google.com/a/macros/humand.co/s/AKfycbxotkr2FO1P8f1b4g-dEfbSezW2cMCzpVmXr4dJ6UCtpvCr0U7PD4YfkAA237cQc59j/exec";
 
 let state = { grupos: [], inscriptos: [], asistencia: [], alertas: [] };
 let sesion = { grupoNumero: null, miembros: [], marcas: {} };
@@ -222,9 +222,9 @@ function horaAhora() {
 async function cargarDatos() {
   try {
     const [gRes, iRes, aRes, alRes] = await Promise.all([
-      fetch(`${SHEETY_URL}/grupos`),
-      fetch(`${SHEETY_URL}/formResponses1`),
-      fetch(`${SHEETY_URL}/asistencia`),
+      fetch(`${GAS_URL}?sheet=grupos`),
+      fetch(`${GAS_URL}?sheet=formResponses1`),
+      fetch(`${GAS_URL}?sheet=asistencia`),
       fetch("/api/attendance")
     ]);
 
@@ -474,7 +474,7 @@ async function guardarSesion() {
     if (!res.ok) throw new Error(data.error);
 
     // Recargar asistencia y volver al historial
-    const aRes = await fetch(`${SHEETY_URL}/asistencia`);
+    const aRes = await fetch(`${GAS_URL}?sheet=asistencia`);
     state.asistencia = aRes.ok ? (await aRes.json()).asistencia || [] : [];
 
     renderDashboard();
