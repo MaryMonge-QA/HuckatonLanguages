@@ -110,7 +110,7 @@ Respondé ÚNICAMENTE con un JSON array válido, sin texto extra, sin bloques de
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         grupo: {
-          ngrupoNumero:    g.grupo_numero,
+          grupoNumero:    g.grupo_numero,
           idioma:          g.idioma,
           nivel:           g.nivel,
           horarioSugerido: g.horario_sugerido,

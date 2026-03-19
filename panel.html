@@ -308,7 +308,7 @@ function renderDashboard() {
 
   const html = state.grupos.map(g => {
     const miembros = (g.miembros||"").split(",").map(m=>m.trim()).filter(Boolean);
-    const asistGrupo = state.asistencia.filter(r => String(r.grupo) === String(g.ngrupoNumero));
+    const asistGrupo = state.asistencia.filter(r => String(r.grupo) === String(g.grupoNumero));
 
     const rows = miembros.map(nombre => {
       const registros = asistGrupo.filter(r => r.nombre === nombre);
@@ -326,7 +326,7 @@ function renderDashboard() {
 
     return `
       <div class="dash-grupo-card">
-        <div class="dash-grupo-nombre">Grupo ${g.ngrupoNumero} · ${g.idioma} ${g.nivel}</div>
+        <div class="dash-grupo-nombre">Grupo ${g.grupoNumero} · ${g.idioma} ${g.nivel}</div>
         ${rows || `<div style="font-size:12px;color:#aaa">Sin datos de asistencia</div>`}
       </div>`;
   }).join("");
@@ -349,7 +349,7 @@ function renderGrupos() {
     return `
       <div class="grupo-card">
         <div class="grupo-header">
-          <div class="grupo-titulo">Grupo ${g.ngrupoNumero} · ${g.idioma}</div>
+          <div class="grupo-titulo">Grupo ${g.grupoNumero} · ${g.idioma}</div>
           <span class="badge badge-${tieneAlerta?"alerta":"ok"}">${tieneAlerta?"Alerta":"Sin alertas"}</span>
         </div>
         <div class="grupo-info">${g.nivel} · ${g.horarioSugerido||"—"}</div>
@@ -386,8 +386,8 @@ function renderLista() {
     ? `<option value="">— Primero generá grupos —</option>`
     : `<option value="">Seleccioná un grupo</option>` +
       state.grupos
-        .filter(g => !gruposYaTomados.has(String(g.ngrupoNumero)))
-        .map(g => `<option value="${g.ngrupoNumero}">Grupo ${g.ngrupoNumero} · ${g.idioma} ${g.nivel}</option>`)
+        .filter(g => !gruposYaTomados.has(String(g.grupoNumero)))
+        .map(g => `<option value="${g.grupoNumero}">Grupo ${g.grupoNumero} · ${g.idioma} ${g.nivel}</option>`)
         .join("");
 
   document.getElementById("tab-lista").innerHTML = `
@@ -401,7 +401,7 @@ function renderLista() {
 function selectGrupo(grupoNumero) {
   if (!grupoNumero) { document.getElementById("lista-content").innerHTML = ""; return; }
 
-  const grupo = state.grupos.find(g => String(g.ngrupoNumero) === String(grupoNumero));
+  const grupo = state.grupos.find(g => String(g.grupoNumero) === String(grupoNumero));
   if (!grupo) return;
 
   const miembros = (grupo.miembros||"").split(",").map(m=>m.trim()).filter(Boolean);
@@ -504,7 +504,7 @@ function renderHistorial(filtroGrupo = "") {
     : state.asistencia;
 
   const opcionesGrupo = `<option value="">Todos los grupos</option>` +
-    state.grupos.map(g => `<option value="${g.ngrupoNumero}" ${filtroGrupo==g.ngrupoNumero?"selected":""}>Grupo ${g.ngrupoNumero} · ${g.idioma}</option>`).join("");
+    state.grupos.map(g => `<option value="${g.grupoNumero}" ${filtroGrupo==g.grupoNumero?"selected":""}>Grupo ${g.grupoNumero} · ${g.idioma}</option>`).join("");
 
   if (registros.length === 0) {
     el.innerHTML = `
