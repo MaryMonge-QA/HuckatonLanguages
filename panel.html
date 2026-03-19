@@ -177,7 +177,7 @@ async function cargarDatos() {
       const listaMiembros = (g.miembros || "").split(",").map(m => m.trim()).filter(Boolean);
       const tieneAlerta   = listaMiembros.some(m => nombresConAlerta.has(m));
       return {
-        grupoNumero:     g.grupoNumero,
+        grupoNumero:     g.ngrupoNumero,
         idioma:          g.idioma,
         nivel:           g.nivel,
         horarioSugerido: g.horarioSugerido,
