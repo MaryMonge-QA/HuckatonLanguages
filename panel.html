@@ -87,6 +87,13 @@
 
   /* ── EMPTY STATE ── */
   .empty { text-align: center; padding: 48px; color: #aaa; font-size: 14px; }
+
+  /* ── GENERAR GRUPOS ── */
+  .generar-btn { display: flex; align-items: center; gap: 10px; background: #534AB7; color: #fff; border: none; border-radius: 10px; padding: 12px 22px; font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 24px; transition: background 0.15s; }
+  .generar-btn:hover:not(:disabled) { background: #3C3489; }
+  .generar-btn:disabled { background: #a8a4d8; cursor: not-allowed; }
+  .generar-spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
+  .generar-btn.loading .generar-spinner { display: block; }
 </style>
 </head>
 <body>
@@ -154,6 +161,30 @@ function initials(n) {
   return (n || "?").split(" ").map(p => p[0]).slice(0, 2).join("").toUpperCase();
 }
 
+async function generarGrupos() {
+  const btn = document.getElementById("generar-btn");
+  btn.disabled = true;
+  btn.classList.add("loading");
+  btn.querySelector(".generar-spinner").style.display = "block";
+  btn.childNodes[btn.childNodes.length - 1].textContent = " Generando grupos...";
+
+  try {
+    const res = await fetch("/api/generate-groups", { method: "POST" });
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error || "Error al generar grupos");
+
+    // Recargar datos del panel con los grupos nuevos
+    await cargarDatos();
+  } catch (e) {
+    alert("Error: " + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove("loading");
+    btn.childNodes[btn.childNodes.length - 1].textContent = " Generar grupos con IA";
+  }
+}
+
 async function cargarDatos() {
   try {
     // Leer grupos e inscriptos desde Sheety en paralelo
@@ -200,6 +231,10 @@ function renderPanel(grupos, inscriptos, alertas) {
   const totalAlertas  = alertas.length;
 
   document.getElementById("panel-content").innerHTML = `
+    <button class="generar-btn" id="generar-btn" onclick="generarGrupos()">
+      <div class="generar-spinner"></div>
+      ✦ Generar grupos con IA
+    </button>
     <div class="stats" id="stats-row"></div>
     <div class="alert-banner" id="alert-banner" style="display:none">
       <div class="alert-dot"></div>

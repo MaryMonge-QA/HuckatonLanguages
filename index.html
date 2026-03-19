@@ -117,15 +117,13 @@
 
     <div id="loading">
       <div class="spinner"></div>
-      <p>La IA está buscando tu grupo ideal...</p>
+      <p>Guardando tu inscripción...</p>
     </div>
 
     <div id="resultado">
       <div class="check">✓</div>
       <h3>¡Ya estás inscripto!</h3>
-      <p>Te asignamos al grupo más compatible con tu perfil.</p>
-      <div class="grupo-card" id="grupo-card"></div>
-      <p style="margin-top:16px; font-size:13px; color:#888;">People se va a contactar con los detalles de tu primera clase.</p>
+      <p>Tu registro fue recibido. El equipo de People va a formar los grupos y te va a contactar con los detalles de tu primera clase.</p>
     </div>
   </div>
 </main>
@@ -175,24 +173,14 @@
         })
       });
 
-      const grupo = await res.json();
+      const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(grupo.error || "Error del servidor");
+        throw new Error(data.error || "Error del servidor");
       }
 
       document.getElementById("loading").style.display = "none";
       document.getElementById("resultado").style.display = "block";
-      document.getElementById("grupo-card").innerHTML = `
-        <div class="lbl">Grupo asignado</div>
-        <div class="val">Grupo ${grupo.grupo_numero} · ${grupo.idioma} ${grupo.nivel}</div>
-        <div class="lbl">Horario sugerido</div>
-        <div class="val">${grupo.horario_sugerido}</div>
-        <div class="lbl">Compañeros</div>
-        <div class="val">${grupo.companeros.join(", ")}</div>
-        <div class="lbl">Mensaje</div>
-        <div class="val">${grupo.mensaje}</div>
-      `;
     } catch (e) {
       document.getElementById("loading").style.display = "none";
       document.getElementById("form-view").style.display = "block";

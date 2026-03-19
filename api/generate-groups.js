@@ -1,0 +1,122 @@
+const SHEETY_URL = "https://api.sheety.co/782c0e1ef97d36c7932073da8a8a8954/sistemaClasesIdiomas";
+
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Método no permitido" });
+  }
+
+  // 1. Leer todos los inscriptos
+  const inscriptosRes = await fetch(`${SHEETY_URL}/formResponses1`);
+  if (!inscriptosRes.ok) {
+    return res.status(502).json({ error: "Error al leer los inscriptos" });
+  }
+  const inscriptos = (await inscriptosRes.json()).formResponses1 || [];
+
+  if (inscriptos.length === 0) {
+    return res.status(400).json({ error: "No hay inscriptos todavía" });
+  }
+
+  // 2. Armar prompt para que Claude genere TODOS los grupos a la vez
+  const lista = inscriptos.map((p, i) =>
+    `${i + 1}. ${p.nombreCompletoDelParticipante} | Idioma: ${p["¿quéIdiomaQuieresPracticar?"]} | Nivel: ${p["¿cuálEsTuNivelActual?"]} | Zona: ${p["¿enQuéZonaHorariaEstás?"]} | Franja: ${p["¿enQuéFranjaHorariaPuedesTomarClases?"]}`
+  ).join("\n");
+
+  const prompt = `
+Sos un asistente que organiza clases de idiomas para una empresa.
+
+Lista completa de inscriptos:
+${lista}
+
+Formá todos los grupos necesarios respetando estas reglas:
+- Grupos de 4 a 6 personas (si hay pocos inscriptos, está bien grupos menores)
+- Mismo idioma obligatorio
+- Niveles compatibles: A1+A2 juntos, B1+B2 juntos, C1 solo
+- Zona horaria: diferencia máxima de 3 horas entre miembros del grupo
+- Argentina (UTC-3) y Colombia (UTC-5) son compatibles
+- Argentina (UTC-3) y España (UTC+1) NO son compatibles
+- México (UTC-6) y Colombia (UTC-5) son compatibles
+- Franja horaria: los miembros deben compartir la misma franja o franjas compatibles
+- Todos los inscriptos deben quedar asignados a algún grupo
+
+Respondé ÚNICAMENTE con un JSON array válido, sin texto extra, sin bloques de código:
+[
+  {
+    "grupo_numero": 1,
+    "idioma": "Inglés",
+    "nivel": "A1-A2",
+    "horario_sugerido": "10:00 ARG / 09:00 COL",
+    "miembros": ["Nombre 1", "Nombre 2", "Nombre 3"]
+  },
+  {
+    "grupo_numero": 2,
+    "idioma": "Inglés",
+    "nivel": "B1-B2",
+    "horario_sugerido": "15:00 ARG / 14:00 COL",
+    "miembros": ["Nombre 4", "Nombre 5"]
+  }
+]
+`;
+
+  // 3. Llamar a Claude
+  const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": process.env.ANTHROPIC_API_KEY,
+      "anthropic-version": "2023-06-01"
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 2000,
+      messages: [{ role: "user", content: prompt }]
+    })
+  });
+
+  if (!claudeRes.ok) {
+    console.error("Error Claude:", claudeRes.status, await claudeRes.text());
+    return res.status(502).json({ error: "Error al contactar la IA" });
+  }
+
+  const texto = (await claudeRes.json()).content[0].text.replace(/```json|```/g, "").trim();
+
+  let grupos;
+  try {
+    grupos = JSON.parse(texto);
+  } catch {
+    console.error("Claude no devolvió JSON válido:", texto);
+    return res.status(500).json({ error: "La IA devolvió una respuesta inesperada" });
+  }
+
+  // 4. Borrar grupos anteriores del Sheet
+  const gruposActualesRes = await fetch(`${SHEETY_URL}/grupos`);
+  if (gruposActualesRes.ok) {
+    const gruposActuales = (await gruposActualesRes.json()).grupos || [];
+    await Promise.all(
+      gruposActuales.map(g =>
+        fetch(`${SHEETY_URL}/grupos/${g.id}`, { method: "DELETE" }).catch(() => {})
+      )
+    );
+  }
+
+  // 5. Guardar los grupos nuevos en el Sheet
+  await Promise.all(
+    grupos.map(g =>
+      fetch(`${SHEETY_URL}/grupos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          grupos: {
+            ngrupoNumero:    g.grupo_numero,
+            idioma:          g.idioma,
+            nivel:           g.nivel,
+            horarioSugerido: g.horario_sugerido,
+            miembros:        g.miembros.join(", "),
+            estado:          "ok"
+          }
+        })
+      }).catch(e => console.error(`Error guardando grupo ${g.grupo_numero}:`, e))
+    )
+  );
+
+  return res.status(200).json({ grupos });
+}
