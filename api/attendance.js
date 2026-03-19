@@ -71,9 +71,12 @@ export default async function handler(req, res) {
           template_id: EMAILJS_TEMPLATE,
           user_id:     EMAILJS_PUBLIC_KEY,
           template_params: {
-            to_name:  alerta.nombre,
-            grupo:    `Grupo ${alerta.grupo}`,
-            ausencias: alerta.ausenciasConsecutivas
+            employee_name:    alerta.nombre,
+            department:       `Grupo ${alerta.grupo}`,
+            date:             new Date().toLocaleDateString("es-AR"),
+            absence_type:     "Ausencia consecutiva",
+            reason:           "Ausencias consecutivas registradas en el sistema",
+            consecutive_days: alerta.ausenciasConsecutivas
           }
         })
       });

@@ -548,36 +548,11 @@ function renderHistorial(filtroGrupo = "") {
       </div>`;
   }).join("");
 
-  // Estadísticas acumuladas por alumno
-  const porAlumno = {};
-  registros.forEach(r => {
-    if (!porAlumno[r.nombre]) porAlumno[r.nombre] = { total:0, presentes:0 };
-    porAlumno[r.nombre].total++;
-    if (r.estatus==="Presente"||r.estatus==="Tarde") porAlumno[r.nombre].presentes++;
-  });
-
-  const statsHTML = Object.entries(porAlumno)
-    .sort((a,b) => b[1].presentes/b[1].total - a[1].presentes/a[1].total)
-    .map(([nombre, d]) => {
-      const pct = Math.round(d.presentes/d.total*100);
-      const color = pct>=80?"#534AB7":pct>=60?"#B87333":"#E24B4A";
-      return `
-        <div class="stat-alumno-row">
-          <span style="font-size:13px">${nombre}</span>
-          <div class="pct-bar-wrap"><div class="pct-bar" style="width:${pct}%;background:${color}"></div></div>
-          <div class="pct-num" style="color:${color}">${pct}%</div>
-        </div>`;
-    }).join("");
-
   el.innerHTML = `
     <div class="historial-filtros">
       <select onchange="renderHistorial(this.value)">${opcionesGrupo}</select>
     </div>
-    ${sesionesHTML}
-    <div class="stats-alumno-table">
-      <h4>Asistencia acumulada por alumno</h4>
-      ${statsHTML}
-    </div>`;
+    ${sesionesHTML}`;
 }
 
 // ── ALERTAS ───────────────────────────────────────────
