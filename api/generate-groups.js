@@ -117,7 +117,7 @@ Respondé ÚNICAMENTE con un JSON array válido, sin texto extra, sin bloques de
     for (const g of gruposActuales) {
       await fetch(GAS_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ action: "delete", sheet: "grupos", id: g.id })
       }).catch(() => {});
     }
@@ -125,27 +125,29 @@ Respondé ÚNICAMENTE con un JSON array válido, sin texto extra, sin bloques de
 
   // 5. Guardar los grupos nuevos en el Sheet (uno por uno para evitar rate limit)
   for (const g of grupos) {
+    const payload = {
+      action: "add",
+      sheet: "grupos",
+      data: {
+        grupoNumero:     g.grupo_numero,
+        idioma:          g.idioma,
+        nivel:           g.nivel,
+        horarioSugerido: g.horario_sugerido,
+        miembros:        g.miembros.join(", "),
+        estado:          "ok"
+      }
+    };
+    console.log("Guardando grupo:", JSON.stringify(payload.data));
     const postRes = await fetch(GAS_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "add",
-        sheet: "grupos",
-        data: {
-          grupoNumero:    g.grupo_numero,
-          idioma:          g.idioma,
-          nivel:           g.nivel,
-          horarioSugerido: g.horario_sugerido,
-          miembros:        g.miembros.join(", "),
-          estado:          "ok"
-        }
-      })
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(payload)
     });
+    const postText = await postRes.text();
+    console.log(`Respuesta grupo ${g.grupo_numero}:`, postRes.status, postText);
 
     if (!postRes.ok) {
-      const err = await postRes.text();
-      console.error(`Error guardando grupo ${g.grupo_numero}:`, err);
-      return res.status(502).json({ error: `Error al guardar el grupo ${g.grupo_numero}: ${err}` });
+      return res.status(502).json({ error: `Error al guardar el grupo ${g.grupo_numero}: ${postText}` });
     }
   }
 

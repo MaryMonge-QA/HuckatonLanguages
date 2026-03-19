@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   for (const alumno of alumnos) {
     const postRes = await fetch(GAS_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({
         action: "add",
         sheet: "asistencia",

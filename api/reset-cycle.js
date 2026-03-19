@@ -7,7 +7,7 @@ async function deleteAll(sheet) {
   for (const row of rows) {
     await fetch(GAS_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({ action: "delete", sheet, id: row.id })
     }).catch(() => {});
   }
