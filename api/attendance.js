@@ -1,53 +1,47 @@
-const SHEETY_URL = "https://api.sheety.co/782c0e1ef97d36c7932073da8a8a8954/sistemaClasesIdiomas";
-
-const EMAILJS_URL   = "https://api.emailjs.com/api/v1.0/email/send";
+const SHEETY_URL     = "https://api.sheety.co/782c0e1ef97d36c7932073da8a8a8954/sistemaClasesIdiomas";
+const EMAILJS_URL    = "https://api.emailjs.com/api/v1.0/email/send";
 const EMAILJS_SERVICE  = "service_9n8jsmc";
 const EMAILJS_TEMPLATE = "template_1vdttpi";
 const EMAILJS_PUBLIC_KEY = "ZPdDDpCz3TRIZf-qj";
+
+function parseFecha(fecha) {
+  // Soporta "19/3/2026" y "2026-03-19"
+  if (!fecha) return new Date(0);
+  if (fecha.includes("-")) return new Date(fecha);
+  const [d, m, y] = fecha.split("/");
+  return new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+}
 
 export default async function handler(req, res) {
   if (req.method !== "GET" && req.method !== "POST") {
     return res.status(405).json({ error: "Método no permitido" });
   }
 
-  // 1. Leer registros de asistencia desde Sheety
   const r = await fetch(`${SHEETY_URL}/asistencia`);
-  if (!r.ok) {
-    return res.status(502).json({ error: "Error al leer la asistencia" });
-  }
-  const data = await r.json();
-  const registros = data.asistencia || [];
+  if (!r.ok) return res.status(502).json({ error: "Error al leer la asistencia" });
 
-  if (registros.length === 0) {
-    return res.status(200).json({ alertas: [], enviados: [] });
-  }
+  const registros = (await r.json()).asistencia || [];
+  if (registros.length === 0) return res.status(200).json({ alertas: [], enviados: [] });
 
-  // 2. Agrupar historial por persona (por email)
+  // Agrupar por nombre
   const porPersona = {};
-  for (const r of registros) {
-    const key = r.email || r.nombre;
+  for (const reg of registros) {
+    const key = reg.nombre;
+    if (!key) continue;
     if (!porPersona[key]) porPersona[key] = [];
-    porPersona[key].push(r);
+    porPersona[key].push(reg);
   }
 
-  // 3. Detectar 3+ ausencias consecutivas
+  // Detectar 4+ ausencias consecutivas
   const alertas = [];
-  for (const key in porPersona) {
-    const historial = porPersona[key].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+  for (const nombre in porPersona) {
+    const historial = porPersona[nombre].sort((a, b) => parseFecha(a.fecha) - parseFecha(b.fecha));
 
     let consecutivas = 0;
     let maxConsecutivas = 0;
 
-    for (const registro of historial) {
-      const ausente =
-        registro.asistio === false ||
-        registro.asistio === "FALSE" ||
-        registro.asistio === "false" ||
-        registro.asistio === "No" ||
-        registro.asistio === "no" ||
-        registro.asistio === "0";
-
-      if (ausente) {
+    for (const reg of historial) {
+      if (reg.estatus === "Ausente") {
         consecutivas++;
         maxConsecutivas = Math.max(maxConsecutivas, consecutivas);
       } else {
@@ -58,15 +52,14 @@ export default async function handler(req, res) {
     if (maxConsecutivas >= 4) {
       const ultimo = historial[historial.length - 1];
       alertas.push({
-        nombre: ultimo.nombre,
-        email: ultimo.email || key,
-        grupoNumero: ultimo.grupoNumero,
+        nombre,
+        grupo:               ultimo.grupo,
         ausenciasConsecutivas: maxConsecutivas
       });
     }
   }
 
-  // 4. Mandar email de alerta por cada persona con 3+ ausencias
+  // Mandar email por cada alerta
   const enviados = [];
   for (const alerta of alertas) {
     try {
@@ -79,16 +72,13 @@ export default async function handler(req, res) {
           user_id:     EMAILJS_PUBLIC_KEY,
           template_params: {
             to_name:  alerta.nombre,
-            to_email: alerta.email,
-            grupo:    `Grupo ${alerta.grupoNumero}`,
+            grupo:    `Grupo ${alerta.grupo}`,
             ausencias: alerta.ausenciasConsecutivas
           }
         })
       });
-
-      enviados.push({ nombre: alerta.nombre, ok: emailRes.ok, status: emailRes.status });
+      enviados.push({ nombre: alerta.nombre, ok: emailRes.ok });
     } catch (e) {
-      console.error(`Error enviando email a ${alerta.nombre}:`, e);
       enviados.push({ nombre: alerta.nombre, ok: false, error: e.message });
     }
   }

@@ -37,6 +37,9 @@
   .generar-btn { display: inline-flex; align-items: center; gap: 8px; background: #534AB7; color: #fff; border: none; border-radius: 10px; padding: 11px 20px; font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 24px; transition: background 0.15s; }
   .generar-btn:hover:not(:disabled) { background: #3C3489; }
   .generar-btn:disabled { background: #a8a4d8; cursor: not-allowed; }
+  .reset-btn { display: inline-flex; align-items: center; gap: 8px; background: none; color: #A32D2D; border: 1.5px solid #F09595; border-radius: 10px; padding: 11px 20px; font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 24px; margin-left: 10px; transition: all 0.15s; }
+  .reset-btn:hover:not(:disabled) { background: #FCEBEB; }
+  .reset-btn:disabled { opacity: 0.5; cursor: not-allowed; }
   .spin { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -255,6 +258,9 @@ function renderPanel() {
     <button class="generar-btn" id="generar-btn" onclick="generarGrupos()">
       <div class="spin" id="gen-spin"></div>
       ✦ Generar grupos con IA
+    </button>
+    <button class="reset-btn" id="reset-btn" onclick="borrarCiclo()">
+      ↺ Borrar ciclo
     </button>
 
     <div class="stats">
@@ -587,11 +593,32 @@ function renderAlertas() {
         <div class="alerta-avatar">${initials(a.nombre)}</div>
         <div class="alerta-info">
           <div class="alerta-nombre">${a.nombre}</div>
-          <div class="alerta-detalle">Grupo ${a.grupoNumero} · ${a.email||""}</div>
+          <div class="alerta-detalle">Grupo ${a.grupo}</div>
         </div>
         <div class="alerta-badge">⚠ ${a.ausenciasConsecutivas} ausencias seguidas</div>
       </div>`).join("") +
     `</div>`;
+}
+
+// ── BORRAR CICLO ──────────────────────────────────────
+async function borrarCiclo() {
+  const confirmar = confirm("¿Seguro que querés borrar el ciclo actual?\nSe van a eliminar todos los grupos y el historial de asistencia.\n\nLos inscriptos se mantienen.");
+  if (!confirmar) return;
+
+  const btn = document.getElementById("reset-btn");
+  btn.disabled = true;
+  btn.textContent = "Borrando...";
+
+  try {
+    const res = await fetch("/api/reset-cycle", { method: "POST" });
+    if (!res.ok) throw new Error("Error al borrar el ciclo");
+    await cargarDatos();
+  } catch(e) {
+    alert("Error: " + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "↺ Borrar ciclo";
+  }
 }
 
 // ── GENERAR GRUPOS ────────────────────────────────────
