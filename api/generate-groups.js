@@ -94,36 +94,38 @@ Respondé ÚNICAMENTE con un JSON array válido, sin texto extra, sin bloques de
     return res.status(500).json({ error: "La IA devolvió una respuesta inesperada" });
   }
 
-  // 4. Borrar grupos anteriores del Sheet
+  // 4. Borrar grupos anteriores del Sheet (uno por uno)
   const gruposActualesRes = await fetch(`${SHEETY_URL}/grupos`);
   if (gruposActualesRes.ok) {
     const gruposActuales = (await gruposActualesRes.json()).grupos || [];
-    await Promise.all(
-      gruposActuales.map(g =>
-        fetch(`${SHEETY_URL}/grupos/${g.id}`, { method: "DELETE" }).catch(() => {})
-      )
-    );
+    for (const g of gruposActuales) {
+      await fetch(`${SHEETY_URL}/grupos/${g.id}`, { method: "DELETE" }).catch(() => {});
+    }
   }
 
-  // 5. Guardar los grupos nuevos en el Sheet
-  await Promise.all(
-    grupos.map(g =>
-      fetch(`${SHEETY_URL}/grupos`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          grupos: {
-            ngrupoNumero:    g.grupo_numero,
-            idioma:          g.idioma,
-            nivel:           g.nivel,
-            horarioSugerido: g.horario_sugerido,
-            miembros:        g.miembros.join(", "),
-            estado:          "ok"
-          }
-        })
-      }).catch(e => console.error(`Error guardando grupo ${g.grupo_numero}:`, e))
-    )
-  );
+  // 5. Guardar los grupos nuevos en el Sheet (uno por uno para evitar rate limit)
+  for (const g of grupos) {
+    const postRes = await fetch(`${SHEETY_URL}/grupos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        grupos: {
+          ngrupoNumero:    g.grupo_numero,
+          idioma:          g.idioma,
+          nivel:           g.nivel,
+          horarioSugerido: g.horario_sugerido,
+          miembros:        g.miembros.join(", "),
+          estado:          "ok"
+        }
+      })
+    });
+
+    if (!postRes.ok) {
+      const err = await postRes.text();
+      console.error(`Error guardando grupo ${g.grupo_numero}:`, err);
+      return res.status(502).json({ error: `Error al guardar el grupo ${g.grupo_numero}: ${err}` });
+    }
+  }
 
   return res.status(200).json({ grupos });
 }
