@@ -6,11 +6,11 @@ export default async function handler(req, res) {
   }
 
   // 1. Leer todos los inscriptos
-  const inscriptosRes = await fetch(`${GAS_URL}?sheet=formResponses1`);
+  const inscriptosRes = await fetch(`${GAS_URL}?sheet=inscripciones`);
   if (!inscriptosRes.ok) {
     return res.status(502).json({ error: "Error al leer los inscriptos" });
   }
-  const inscriptos = (await inscriptosRes.json()).formResponses1 || [];
+  const inscriptos = (await inscriptosRes.json()).inscripciones || [];
 
   if (inscriptos.length === 0) {
     return res.status(400).json({ error: "No hay inscriptos todavía" });

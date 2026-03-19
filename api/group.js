@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     headers: { "Content-Type": "text/plain" },
     body: JSON.stringify({
       action: "add",
-      sheet: "formResponses1",
+      sheet: "inscripciones",
       data: {
         timestamp: new Date().toLocaleString("es-AR"),
         nombreCompletoDelParticipante: nombre,

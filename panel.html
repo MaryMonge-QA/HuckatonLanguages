@@ -222,13 +222,13 @@ async function cargarDatos() {
   try {
     const [gRes, iRes, aRes, alRes] = await Promise.all([
       fetch("/api/data?sheet=grupos"),
-      fetch("/api/data?sheet=formResponses1"),
+      fetch("/api/data?sheet=inscripciones"),
       fetch("/api/data?sheet=asistencia"),
       fetch("/api/attendance")
     ]);
 
     state.grupos      = gRes.ok  ? (await gRes.json()).grupos          || [] : [];
-    state.inscriptos  = iRes.ok  ? (await iRes.json()).formResponses1  || [] : [];
+    state.inscriptos  = iRes.ok  ? (await iRes.json()).inscripciones  || [] : [];
     state.asistencia  = aRes.ok  ? (await aRes.json()).asistencia      || [] : [];
     state.alertas     = alRes.ok ? (await alRes.json()).alertas        || [] : [];
 
