@@ -305,7 +305,7 @@ function renderDashboard() {
     const asistGrupo = state.asistencia.filter(r => String(r.grupoNumero) === String(g.ngrupoNumero));
 
     const rows = miembros.map(nombre => {
-      const registros = asistGrupo.filter(r => r.nombreAlumno === nombre);
+      const registros = asistGrupo.filter(r => r.nombre === nombre);
       const total     = registros.length;
       const presentes = registros.filter(r => r.estatus==="Presente"||r.estatus==="Tarde").length;
       const pct       = total > 0 ? Math.round(presentes/total*100) : null;
@@ -360,17 +360,35 @@ function renderGrupos() {
 
 // ── PASAR LISTA ───────────────────────────────────────
 function renderLista() {
+  const hoy = new Date().toISOString().split("T")[0];
+
+  // Grupos que ya tienen asistencia registrada para la fecha seleccionada
+  const fechaActual = sesion.fecha || hoy;
+  const gruposYaTomados = new Set(
+    state.asistencia
+      .filter(r => r.fecha === fechaActual || r.fecha === fechaActual.split("-").reverse().join("/"))
+      .map(r => String(r.grupoNumero))
+  );
+
   const opciones = state.grupos.length === 0
     ? `<option value="">— Primero generá grupos —</option>`
     : `<option value="">Seleccioná un grupo</option>` +
-      state.grupos.map(g => `<option value="${g.ngrupoNumero}">Grupo ${g.ngrupoNumero} · ${g.idioma} ${g.nivel}</option>`).join("");
+      state.grupos
+        .filter(g => !gruposYaTomados.has(String(g.ngrupoNumero)))
+        .map(g => `<option value="${g.ngrupoNumero}">Grupo ${g.ngrupoNumero} · ${g.idioma} ${g.nivel}</option>`)
+        .join("");
 
   document.getElementById("tab-lista").innerHTML = `
     <div class="lista-header">
       <select id="grupo-select" onchange="selectGrupo(this.value)">${opciones}</select>
-      <div class="fecha-info">📅 ${fechaHoy()}</div>
+      <input type="date" id="fecha-picker" value="${hoy}" onchange="onFechaChange(this.value)" style="padding:9px 14px;border:1px solid #ddd;border-radius:8px;font-size:14px;outline:none;background:#fafafa;">
     </div>
     <div id="lista-content"></div>`;
+}
+
+function onFechaChange(fecha) {
+  sesion.fecha = fecha;
+  renderLista();
 }
 
 function selectGrupo(grupoNumero) {
@@ -434,15 +452,15 @@ async function guardarSesion() {
   btn.disabled = true;
   btn.textContent = "Guardando...";
 
-  const fecha = new Date().toLocaleDateString("es-AR");
-  const hora  = horaAhora();
+  const fechaPicker = document.getElementById("fecha-picker")?.value;
+  const fecha  = fechaPicker || new Date().toISOString().split("T")[0];
   const alumnos = sesion.miembros.map(n => ({ nombre: n, estatus: sesion.marcas[n] }));
 
   try {
     const res = await fetch("/api/save-attendance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ grupoNumero: sesion.grupoNumero, fecha, hora, alumnos })
+      body: JSON.stringify({ grupoNumero: sesion.grupoNumero, fecha, alumnos })
     });
 
     const data = await res.json();
@@ -495,7 +513,7 @@ function renderHistorial(filtroGrupo = "") {
   registros.forEach(r => {
     const key = `${r.grupoNumero}__${r.fecha}__${r.hora}`;
     if (!sesiones[key]) sesiones[key] = { grupoNumero: r.grupoNumero, fecha: r.fecha, hora: r.hora, alumnos: [] };
-    sesiones[key].alumnos.push({ nombre: r.nombreAlumno, estatus: r.estatus });
+    sesiones[key].alumnos.push({ nombre: r.nombre, estatus: r.estatus });
   });
 
   const sesionesHTML = Object.entries(sesiones).reverse().map(([key, s]) => {
@@ -526,9 +544,9 @@ function renderHistorial(filtroGrupo = "") {
   // Estadísticas acumuladas por alumno
   const porAlumno = {};
   registros.forEach(r => {
-    if (!porAlumno[r.nombreAlumno]) porAlumno[r.nombreAlumno] = { total:0, presentes:0 };
-    porAlumno[r.nombreAlumno].total++;
-    if (r.estatus==="Presente"||r.estatus==="Tarde") porAlumno[r.nombreAlumno].presentes++;
+    if (!porAlumno[r.nombre]) porAlumno[r.nombre] = { total:0, presentes:0 };
+    porAlumno[r.nombre].total++;
+    if (r.estatus==="Presente"||r.estatus==="Tarde") porAlumno[r.nombre].presentes++;
   });
 
   const statsHTML = Object.entries(porAlumno)

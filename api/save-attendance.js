@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Método no permitido" });
   }
 
-  const { grupoNumero, fecha, hora, alumnos } = req.body;
+  const { grupoNumero, fecha, alumnos } = req.body;
   // alumnos: [{ nombre, estatus }] donde estatus = "Presente" | "Tarde" | "Ausente"
 
   if (!grupoNumero || !alumnos || alumnos.length === 0) {
@@ -19,9 +19,8 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         asistencia: {
           grupoNumero,
-          nombreAlumno: alumno.nombre,
           fecha,
-          hora,
+          nombre:  alumno.nombre,
           estatus: alumno.estatus
         }
       })
