@@ -10,7 +10,9 @@ export default async function handler(req, res) {
   if (!inscriptosRes.ok) {
     return res.status(502).json({ error: "Error al leer los inscriptos" });
   }
-  const inscriptos = (await inscriptosRes.json()).inscripciones || [];
+  const inscriptosJson = await inscriptosRes.json();
+  console.log("Inscriptos raw:", JSON.stringify(inscriptosJson).slice(0, 500));
+  const inscriptos = inscriptosJson.inscripciones || [];
 
   if (inscriptos.length === 0) {
     return res.status(400).json({ error: "No hay inscriptos todavía" });
@@ -20,6 +22,7 @@ export default async function handler(req, res) {
   const lista = inscriptos.map((p, i) =>
     `${i + 1}. ${p.nombre} | Idioma: ${p.idioma} | Nivel: ${p.nivel} | Zona: ${p.zona} | Franja: ${p.franja}`
   ).join("\n");
+  console.log("Lista para Claude:", lista);
 
   const prompt = `
 Sos un asistente que organiza clases de idiomas para una empresa.
@@ -77,7 +80,9 @@ Respondé ÚNICAMENTE con un JSON array válido, sin texto extra, sin bloques de
     return res.status(502).json({ error: "Error al contactar la IA" });
   }
 
-  const rawText = (await claudeRes.json()).content[0].text;
+  const claudeJson = await claudeRes.json();
+  console.log("Claude response:", JSON.stringify(claudeJson).slice(0, 1000));
+  const rawText = claudeJson.content[0].text;
 
   // Extraer el array JSON aunque Claude agregue texto alrededor
   const match = rawText.match(/\[[\s\S]*\]/);
