@@ -72,9 +72,22 @@ Respondé ÚNICAMENTE con un JSON válido, sin texto extra, sin bloques de códi
       })
     });
 
+    if (!response.ok) {
+      const errBody = await response.text();
+      console.error("Error de la API de Claude:", response.status, errBody);
+      return res.status(502).json({ error: "Error al contactar la IA" });
+    }
+
     const data  = await response.json();
     const texto = data.content[0].text.replace(/```json|```/g, "").trim();
-    const grupo = JSON.parse(texto);
+
+    let grupo;
+    try {
+      grupo = JSON.parse(texto);
+    } catch {
+      console.error("Respuesta de Claude no es JSON válido:", texto);
+      return res.status(500).json({ error: "La IA devolvió una respuesta inesperada" });
+    }
 
     return res.status(200).json(grupo);
 
