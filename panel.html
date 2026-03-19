@@ -474,13 +474,13 @@ async function guardarSesion() {
     renderDashboard();
     renderHistorial();
 
-    // Limpiar sesión y mostrar confirmación
+    // Refrescar dropdown (el grupo guardado desaparece) y mostrar confirmación
     sesion = { grupo: null, miembros: [], marcas: {} };
+    renderLista();
     document.getElementById("lista-content").innerHTML =
       `<div style="text-align:center;padding:32px;background:#E1F5EE;border-radius:12px;color:#085041;font-weight:500">
         ✓ Sesión guardada correctamente — ${alumnos.length} alumnos registrados
       </div>`;
-    document.getElementById("grupo-select").value = "";
 
   } catch(e) {
     btn.disabled = false;
