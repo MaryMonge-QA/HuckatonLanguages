@@ -77,13 +77,20 @@ Respondé ÚNICAMENTE con un JSON array válido, sin texto extra, sin bloques de
     return res.status(502).json({ error: "Error al contactar la IA" });
   }
 
-  const texto = (await claudeRes.json()).content[0].text.replace(/```json|```/g, "").trim();
+  const rawText = (await claudeRes.json()).content[0].text;
+
+  // Extraer el array JSON aunque Claude agregue texto alrededor
+  const match = rawText.match(/\[[\s\S]*\]/);
+  if (!match) {
+    console.error("Claude no devolvió un array JSON. Respuesta completa:", rawText);
+    return res.status(500).json({ error: "La IA devolvió una respuesta inesperada" });
+  }
 
   let grupos;
   try {
-    grupos = JSON.parse(texto);
-  } catch {
-    console.error("Claude no devolvió JSON válido:", texto);
+    grupos = JSON.parse(match[0]);
+  } catch (e) {
+    console.error("Error parseando JSON de Claude:", e.message, "\nTexto:", match[0]);
     return res.status(500).json({ error: "La IA devolvió una respuesta inesperada" });
   }
 
