@@ -17,6 +17,7 @@ export default async function handler(req, res) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       formResponses1: {
+        timestamp: new Date().toLocaleString("es-AR"),
         nombreCompletoDelParticipante: nombre,
         emailAddress: email,
         "¿quéIdiomaQuieresPracticar?": idioma,
@@ -112,7 +113,7 @@ Respondé ÚNICAMENTE con un JSON válido, sin texto extra, sin bloques de códi
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      grupo: {
+      grupos: {
         grupoNumero:     grupo.grupo_numero,
         idioma:          grupo.idioma,
         nivel:           grupo.nivel,
