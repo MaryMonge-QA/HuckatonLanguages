@@ -109,7 +109,7 @@ Respondé ÚNICAMENTE con un JSON array válido, sin texto extra, sin bloques de
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        grupos: {
+        grupo: {
           ngrupoNumero:    g.grupo_numero,
           idioma:          g.idioma,
           nivel:           g.nivel,
