@@ -178,7 +178,6 @@
 
 <script>
 const PASSWORD   = "people2024";
-const GAS_URL = "https://script.google.com/a/macros/humand.co/s/AKfycbxotkr2FO1P8f1b4g-dEfbSezW2cMCzpVmXr4dJ6UCtpvCr0U7PD4YfkAA237cQc59j/exec";
 
 let state = { grupos: [], inscriptos: [], asistencia: [], alertas: [] };
 let sesion = { grupoNumero: null, miembros: [], marcas: {} };
@@ -222,9 +221,9 @@ function horaAhora() {
 async function cargarDatos() {
   try {
     const [gRes, iRes, aRes, alRes] = await Promise.all([
-      fetch(`${GAS_URL}?sheet=grupos`),
-      fetch(`${GAS_URL}?sheet=formResponses1`),
-      fetch(`${GAS_URL}?sheet=asistencia`),
+      fetch("/api/data?sheet=grupos"),
+      fetch("/api/data?sheet=formResponses1"),
+      fetch("/api/data?sheet=asistencia"),
       fetch("/api/attendance")
     ]);
 
@@ -474,7 +473,7 @@ async function guardarSesion() {
     if (!res.ok) throw new Error(data.error);
 
     // Recargar asistencia y volver al historial
-    const aRes = await fetch(`${GAS_URL}?sheet=asistencia`);
+    const aRes = await fetch("/api/data?sheet=asistencia");
     state.asistencia = aRes.ok ? (await aRes.json()).asistencia || [] : [];
 
     renderDashboard();
