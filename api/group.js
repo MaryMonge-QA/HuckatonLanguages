@@ -20,12 +20,12 @@ export default async function handler(req, res) {
       sheet: "inscripciones",
       data: {
         timestamp: new Date().toLocaleString("es-AR"),
-        nombreCompletoDelParticipante: nombre,
-        emailAddress: email,
-        "¿quéIdiomaQuieresPracticar?": idioma,
-        "¿cuálEsTuNivelActual?": nivel,
-        "¿enQuéZonaHorariaEstás?": zona,
-        "¿enQuéFranjaHorariaPuedesTomarClases?": franja
+        nombre,
+        email,
+        idioma,
+        nivel,
+        zona,
+        franja
       }
     })
   });

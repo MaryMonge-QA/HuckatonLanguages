@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
   // 2. Armar prompt para que Claude genere TODOS los grupos a la vez
   const lista = inscriptos.map((p, i) =>
-    `${i + 1}. ${p.nombreCompletoDelParticipante} | Idioma: ${p["¿quéIdiomaQuieresPracticar?"]} | Nivel: ${p["¿cuálEsTuNivelActual?"]} | Zona: ${p["¿enQuéZonaHorariaEstás?"]} | Franja: ${p["¿enQuéFranjaHorariaPuedesTomarClases?"]}`
+    `${i + 1}. ${p.nombre} | Idioma: ${p.idioma} | Nivel: ${p.nivel} | Zona: ${p.zona} | Franja: ${p.franja}`
   ).join("\n");
 
   const prompt = `
