@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      formResponse1: {
+      formResponses1: {
         nombreCompletoDelParticipante: nombre,
         emailAddress: email,
         "¿quéIdiomaQuieresPracticar?": idioma,

@@ -177,6 +177,10 @@
 
       const grupo = await res.json();
 
+      if (!res.ok) {
+        throw new Error(grupo.error || "Error del servidor");
+      }
+
       document.getElementById("loading").style.display = "none";
       document.getElementById("resultado").style.display = "block";
       document.getElementById("grupo-card").innerHTML = `
