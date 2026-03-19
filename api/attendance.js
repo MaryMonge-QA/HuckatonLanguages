@@ -55,7 +55,7 @@ export default async function handler(req, res) {
       }
     }
 
-    if (maxConsecutivas >= 3) {
+    if (maxConsecutivas >= 4) {
       const ultimo = historial[historial.length - 1];
       alertas.push({
         nombre: ultimo.nombre,
