@@ -302,7 +302,7 @@ function renderDashboard() {
 
   const html = state.grupos.map(g => {
     const miembros = (g.miembros||"").split(",").map(m=>m.trim()).filter(Boolean);
-    const asistGrupo = state.asistencia.filter(r => String(r.grupoNumero) === String(g.ngrupoNumero));
+    const asistGrupo = state.asistencia.filter(r => String(r.grupo) === String(g.ngrupoNumero));
 
     const rows = miembros.map(nombre => {
       const registros = asistGrupo.filter(r => r.nombre === nombre);
@@ -359,15 +359,21 @@ function renderGrupos() {
 }
 
 // ── PASAR LISTA ───────────────────────────────────────
-function renderLista() {
-  const hoy = new Date().toISOString().split("T")[0];
+function isoToAR(iso) {
+  const [y, m, d] = iso.split("-");
+  return `${parseInt(d)}/${parseInt(m)}/${y}`;
+}
 
-  // Grupos que ya tienen asistencia registrada para la fecha seleccionada
-  const fechaActual = sesion.fecha || hoy;
+function renderLista() {
+  const hoy        = new Date().toISOString().split("T")[0];
+  const fechaISO   = sesion.fecha || hoy;
+  const fechaAR    = isoToAR(fechaISO);
+
+  // Grupos que ya tienen asistencia para esa fecha
   const gruposYaTomados = new Set(
     state.asistencia
-      .filter(r => r.fecha === fechaActual || r.fecha === fechaActual.split("-").reverse().join("/"))
-      .map(r => String(r.grupoNumero))
+      .filter(r => r.fecha === fechaAR || r.fecha === fechaISO)
+      .map(r => String(r.grupo))
   );
 
   const opciones = state.grupos.length === 0
@@ -381,14 +387,9 @@ function renderLista() {
   document.getElementById("tab-lista").innerHTML = `
     <div class="lista-header">
       <select id="grupo-select" onchange="selectGrupo(this.value)">${opciones}</select>
-      <input type="date" id="fecha-picker" value="${hoy}" onchange="onFechaChange(this.value)" style="padding:9px 14px;border:1px solid #ddd;border-radius:8px;font-size:14px;outline:none;background:#fafafa;">
+      <input type="date" id="fecha-picker" value="${fechaISO}" onchange="sesion.fecha=this.value;renderLista()" style="padding:9px 14px;border:1px solid #ddd;border-radius:8px;font-size:14px;outline:none;background:#fafafa;">
     </div>
     <div id="lista-content"></div>`;
-}
-
-function onFechaChange(fecha) {
-  sesion.fecha = fecha;
-  renderLista();
 }
 
 function selectGrupo(grupoNumero) {
@@ -398,7 +399,7 @@ function selectGrupo(grupoNumero) {
   if (!grupo) return;
 
   const miembros = (grupo.miembros||"").split(",").map(m=>m.trim()).filter(Boolean);
-  sesion = { grupoNumero, miembros, marcas: {} };
+  sesion = { grupo: grupoNumero, miembros, marcas: {} };
 
   actualizarVista();
 }
@@ -460,7 +461,7 @@ async function guardarSesion() {
     const res = await fetch("/api/save-attendance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ grupoNumero: sesion.grupoNumero, fecha, alumnos })
+      body: JSON.stringify({ grupo: sesion.grupo, fecha, alumnos })
     });
 
     const data = await res.json();
@@ -474,7 +475,7 @@ async function guardarSesion() {
     renderHistorial();
 
     // Limpiar sesión y mostrar confirmación
-    sesion = { grupoNumero: null, miembros: [], marcas: {} };
+    sesion = { grupo: null, miembros: [], marcas: {} };
     document.getElementById("lista-content").innerHTML =
       `<div style="text-align:center;padding:32px;background:#E1F5EE;border-radius:12px;color:#085041;font-weight:500">
         ✓ Sesión guardada correctamente — ${alumnos.length} alumnos registrados
@@ -493,7 +494,7 @@ function renderHistorial(filtroGrupo = "") {
   const el = document.getElementById("tab-historial");
 
   const registros = filtroGrupo
-    ? state.asistencia.filter(r => String(r.grupoNumero) === String(filtroGrupo))
+    ? state.asistencia.filter(r => String(r.grupo) === String(filtroGrupo))
     : state.asistencia;
 
   const opcionesGrupo = `<option value="">Todos los grupos</option>` +
@@ -508,11 +509,11 @@ function renderHistorial(filtroGrupo = "") {
     return;
   }
 
-  // Agrupar por sesión (grupoNumero + fecha + hora)
+  // Agrupar por sesión (grupo + fecha)
   const sesiones = {};
   registros.forEach(r => {
-    const key = `${r.grupoNumero}__${r.fecha}__${r.hora}`;
-    if (!sesiones[key]) sesiones[key] = { grupoNumero: r.grupoNumero, fecha: r.fecha, hora: r.hora, alumnos: [] };
+    const key = `${r.grupo}__${r.fecha}`;
+    if (!sesiones[key]) sesiones[key] = { grupo: r.grupo, fecha: r.fecha, alumnos: [] };
     sesiones[key].alumnos.push({ nombre: r.nombre, estatus: r.estatus });
   });
 
@@ -530,7 +531,7 @@ function renderHistorial(filtroGrupo = "") {
       <div class="sesion-card">
         <div class="sesion-header" onclick="this.nextElementSibling.classList.toggle('open')">
           <div>
-            <div class="sesion-titulo">Grupo ${s.grupoNumero} · ${s.fecha} ${s.hora}</div>
+            <div class="sesion-titulo">Grupo ${s.grupo} · ${s.fecha}</div>
             <div class="sesion-meta">${s.alumnos.length} alumnos · ${pct}% asistencia</div>
           </div>
           <div class="sesion-badges">

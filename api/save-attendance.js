@@ -5,10 +5,13 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Método no permitido" });
   }
 
-  const { grupoNumero, fecha, alumnos } = req.body;
-  // alumnos: [{ nombre, estatus }] donde estatus = "Presente" | "Tarde" | "Ausente"
+  const { grupo, alumnos } = req.body;
+  // Convertir fecha ISO (2026-03-19) a formato d/m/yyyy para el Sheet
+  const rawFecha = req.body.fecha || new Date().toISOString().split("T")[0];
+  const [y, m, d] = rawFecha.split("-");
+  const fecha = `${parseInt(d)}/${parseInt(m)}/${y}`;
 
-  if (!grupoNumero || !alumnos || alumnos.length === 0) {
+  if (!grupo || !alumnos || alumnos.length === 0) {
     return res.status(400).json({ error: "Faltan datos de la sesión" });
   }
 
@@ -18,9 +21,9 @@ export default async function handler(req, res) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         asistencia: {
-          grupoNumero,
-          fecha,
           nombre:  alumno.nombre,
+          fecha,
+          grupo,
           estatus: alumno.estatus
         }
       })
